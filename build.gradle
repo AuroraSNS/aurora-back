@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.center'
-version = '0.0.1'
+version = '0.0.1_' + new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = '11'
 
 configurations {
@@ -13,7 +13,14 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
+/**
+ * 빌드 시 생성되는 plain.jar 생성 안되게 변경
+ * */
 
+jar{
+	enabled = false
+	archiveClassifier = ''
+}
 repositories {
 	mavenCentral()
 }
