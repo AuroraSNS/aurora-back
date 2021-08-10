@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @GetMapping("/hello")
-    public String hello(){
+    public String hello() {
         log.debug("Hello API 호출됨 !!!");
         return "Hello Aurora~!!!";
     }
