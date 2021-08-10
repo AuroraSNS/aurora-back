@@ -12,6 +12,6 @@ public class HelloController {
     @GetMapping("/hello")
     public String hello(){
         log.debug("Hello API 호출됨 !!!");
-        return "hello~!";
+        return "Hello Aurora~!!!";
     }
 }
