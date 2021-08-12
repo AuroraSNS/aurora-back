@@ -32,6 +32,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	//h2
 	runtimeOnly 'com.h2database:h2'
+	//aws s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-context:1.2.1.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:1.2.1.RELEASE'
 
 	//Swagger 설정
 	implementation "io.springfox:springfox-boot-starter:3.0.0"
