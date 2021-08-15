@@ -1,5 +1,7 @@
 package com.center.aurora.hello;
 
+import com.center.aurora.security.CurrentUser;
+import com.center.aurora.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +15,15 @@ public class HelloController {
     private final HelloService helloService;
 
     @GetMapping("/hello")
-    public String hello() {
-        return "Hello Aurora3~!!!";
+    public String hello(@CurrentUser UserPrincipal userPrincipal) {
+        String ret = "Hello Aurora3~!!!";
+        try{
+            ret += userPrincipal.getEmail();
+        }
+        catch (NullPointerException e){
+            System.out.println("로그인 한 유저 없음");
+        }
+        return ret;
     }
 
     @GetMapping("/hello/dto")
