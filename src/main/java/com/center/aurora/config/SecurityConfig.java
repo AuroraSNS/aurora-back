@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable() // 기본 로그인 창 비활성화
                 .authorizeRequests()
                     .antMatchers("/login", "/oauth2/**","/hello", "/h2-console/**", "/signup").permitAll()
-                    .antMatchers( "/**", "/user/me").hasRole(Role.USER.name())
+                    .antMatchers( "/**", "/user/me", "/posts/**").hasRole(Role.USER.name())
                     .anyRequest().authenticated()
             .and()
                 .oauth2Login()

@@ -1,5 +1,6 @@
 package com.center.aurora.domain.post;
 
+import com.center.aurora.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +20,16 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    private Long writer;
-    private String mood;
-    private String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer") // => FK PK
+    private User writer;
+
+    @Enumerated(EnumType.STRING)
+    private Mood mood;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String content; // VARCHAR(255)
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -29,7 +37,7 @@ public class Post {
 
 
     @Builder
-    public Post(Long writer, String mood, String content) {
+    public Post(User writer, Mood mood, String content) {
         this.writer = writer;
         this.mood = mood;
         this.content = content;
