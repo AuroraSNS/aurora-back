@@ -2,7 +2,7 @@ package com.center.aurora.security;
 
 import com.center.aurora.domain.user.User;
 import com.center.aurora.exception.ResourceNotFoundException;
-import com.center.aurora.repository.UserRepository;
+import com.center.aurora.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -33,7 +36,6 @@ public class User {
 
     @Column
     private String providerId;
-
 
     @Builder
     public User(String name, String email, String image, String bio, Role role, AuthProvider provider, String providerId) {
@@ -63,5 +65,18 @@ public class User {
     public User update(String name) {
         this.name = name;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getName(), user.getName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getImage(), user.getImage()) && Objects.equals(getBio(), user.getBio()) && getRole() == user.getRole() && getProvider() == user.getProvider() && Objects.equals(getProviderId(), user.getProviderId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getEmail(), getImage(), getBio(), getRole(), getProvider(), getProviderId());
     }
 }

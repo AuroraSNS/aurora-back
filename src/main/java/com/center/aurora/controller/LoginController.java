@@ -1,6 +1,6 @@
 package com.center.aurora.controller;
 
-import com.center.aurora.repository.UserRepository;
+import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
