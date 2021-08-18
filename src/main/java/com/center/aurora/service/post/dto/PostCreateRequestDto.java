@@ -12,12 +12,12 @@ public class PostCreateRequestDto {
 
     Mood mood;
     String content;
-    List<MultipartFile> image;
+    List<MultipartFile> images;
 
     @Builder
-    public PostCreateRequestDto(Mood mood, String content, List<MultipartFile> image) {
+    public PostCreateRequestDto(Mood mood, String content, List<MultipartFile> images) {
         this.mood = mood;
         this.content = content;
-        this.image = image;
+        this.images = images;
     }
 }
