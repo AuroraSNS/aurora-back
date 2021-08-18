@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,20 +23,22 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer") // => FK PK
+    @JoinColumn(name = "writer")
     private User writer;
 
     @Enumerated(EnumType.STRING)
     private Mood mood;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String content; // VARCHAR(255)
+    private String content;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "post")
+    List<Image> images = new ArrayList<>();
 
     @Builder
     public Post(User writer, Mood mood, String content) {
@@ -43,4 +47,8 @@ public class Post {
         this.content = content;
     }
 
+    public void update(Mood mood, String content){
+        this.mood = mood;
+        this.content = content;
+    }
 }

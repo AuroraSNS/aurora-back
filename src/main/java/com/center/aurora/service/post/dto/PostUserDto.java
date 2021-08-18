@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class PostListUserDto {
+public class PostUserDto {
     Long id;
     String name;
     String avatar;
 
     @Builder
-    public PostListUserDto(Long id, String name, String avatar) {
+    public PostUserDto(Long id, String name, String avatar) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;

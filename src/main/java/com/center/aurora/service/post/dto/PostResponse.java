@@ -7,16 +7,16 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class PostListResponse {
+public class PostResponse {
 
     Long id;
-    PostListUserDto auth;
+    PostUserDto auth;
     Mood mood;
     String content;
     List<String> images;
 
     @Builder
-    public PostListResponse(Long id, PostListUserDto getAllPostUser, Mood mood, String content, List<String> images) {
+    public PostResponse(Long id, PostUserDto getAllPostUser, Mood mood, String content, List<String> images) {
         this.id = id;
         this.auth = getAllPostUser;
         this.mood = mood;
