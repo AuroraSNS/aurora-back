@@ -16,12 +16,16 @@ public class Image {
     @Column(name = "image_id")
     private Long id;
 
-    private Long post_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     private String image;
 
     @Builder
-    public Image(Long post_id, String image) {
-        this.post_id = post_id;
+    public Image(Long id, Post post, String image) {
+        this.id = id;
+        this.post = post;
         this.image = image;
     }
 
