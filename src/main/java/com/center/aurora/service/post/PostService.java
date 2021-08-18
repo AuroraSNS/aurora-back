@@ -2,7 +2,7 @@ package com.center.aurora.service.post;
 
 
 import com.center.aurora.domain.user.User;
-import com.center.aurora.repository.UserRepository;
+import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.post.dto.PostListResponse;
 import com.center.aurora.service.post.dto.PostListUserDto;
 import com.center.aurora.utils.S3Uploader;

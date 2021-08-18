@@ -2,7 +2,7 @@ package com.center.aurora.controller;
 
 import com.center.aurora.domain.user.User;
 import com.center.aurora.exception.ResourceNotFoundException;
-import com.center.aurora.repository.UserRepository;
+import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;

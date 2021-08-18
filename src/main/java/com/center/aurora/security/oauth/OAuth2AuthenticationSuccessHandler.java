@@ -65,7 +65,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String token = tokenProvider.createToken(authentication);
 
-        Cookie cookie = new Cookie("Authorization", token);
+        Cookie cookie = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
         cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
