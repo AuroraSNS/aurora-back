@@ -1,4 +1,4 @@
-package com.center.aurora.repository;
+package com.center.aurora.repository.user;
 
 import com.center.aurora.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -4,7 +4,7 @@ import com.center.aurora.domain.user.AuthProvider;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
 import com.center.aurora.exception.OAuth2AuthenticationProcessingException;
-import com.center.aurora.repository.UserRepository;
+import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.UserPrincipal;
 import com.center.aurora.security.oauth.user.OAuth2UserInfo;
 import com.center.aurora.security.oauth.user.OAuth2UserInfoFactory;
@@ -19,7 +19,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
 import java.util.Optional;
 /**
  * OAuth2 로그인으로 가져온 정보를 기반으로 DB에 저장, 업데이트한다.
