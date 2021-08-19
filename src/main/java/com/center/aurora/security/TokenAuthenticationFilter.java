@@ -1,5 +1,6 @@
 package com.center.aurora.security;
 
+import com.center.aurora.exception.NoCookieException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 //            String jwt = getJwtFromRequest(request);
             Cookie[] cookies = request.getCookies();
             String jwt = "";
-            for (Cookie cookie : cookies) {
-                if(cookie.getName().equals("Authorization")){
-                    jwt = cookie.getValue();
-                    break;
+            try {
+                for (Cookie cookie : cookies) {
+                    logger.info("쿠키탐색중....");
+                    if(cookie.getName().equals("Authorization")){
+                        jwt = cookie.getValue();
+                        break;
+                    }
                 }
+            }catch (NullPointerException ex){
+                throw new NoCookieException();
             }
+
             if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
                 Long userId = tokenProvider.getUserIdFromToken(jwt);
 
@@ -49,7 +56,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        }catch (Exception ex){
+        }catch (NoCookieException ex){
+            logger.error("등록된 쿠키가 없습니다.");
+        }
+        catch (Exception ex){
             logger.error("Security Context에서 사용자 인증을 설정할 수 없습니다.", ex);
         }
         filterChain.doFilter(request, response);

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Notification {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
