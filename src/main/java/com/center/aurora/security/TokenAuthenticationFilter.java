@@ -32,9 +32,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try{
-//            String jwt = getJwtFromRequest(request);
+            String jwt = getJwtFromRequest(request);
             Cookie[] cookies = request.getCookies();
-            String jwt = "";
             try {
                 for (Cookie cookie : cookies) {
                     logger.info("쿠키탐색중....");
@@ -67,9 +66,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        logger.info("헤더에서 가져온 토큰" + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            logger.info("헤더에서 토큰 가져옴");
             return bearerToken.substring(7, bearerToken.length());
         }
-        return null;
+        return "";
     }
 }

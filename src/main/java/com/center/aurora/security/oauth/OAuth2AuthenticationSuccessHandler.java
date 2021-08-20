@@ -49,6 +49,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         logger.info("OAUTH2 SUCCESS !! REQUEST URL: " + request.getRequestURL().toString());
         clearAuthenticationAttributes(request, response);
+
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
@@ -69,9 +70,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
-
         return UriComponentsBuilder.fromUriString(targetUrl)
-//                .queryParam("token", token)
+                .queryParam("token", token)
                 .build().toUriString();
     }
 
