@@ -23,4 +23,15 @@ public class PostResponse {
         this.content = content;
         this.images = images;
     }
+
+    @Override
+    public String toString() {
+        return "PostResponse{" +
+                "id=" + id +
+                ", auth=" + auth +
+                ", mood=" + mood +
+                ", content='" + content + '\'' +
+                ", images=" + images +
+                '}';
+    }
 }
