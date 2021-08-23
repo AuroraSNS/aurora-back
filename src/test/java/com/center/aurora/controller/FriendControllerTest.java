@@ -105,10 +105,9 @@ class FriendControllerTest {
 
         String url = "http://localhost:" + port + "/friend";
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
 
         //when
-        MvcResult result = mvc.perform(get(url).cookie(accessToken))
+        MvcResult result = mvc.perform(get(url).header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -142,9 +141,8 @@ class FriendControllerTest {
 
         String url = "http://localhost:" + port + "/friend/" + userB.getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
         //when
-        mvc.perform(post(url).cookie(accessToken)).andExpect(status().isOk());
+        mvc.perform(post(url).header("Authorization", "Bearer " + token)).andExpect(status().isOk());
         //then
         List<FriendListDto> allFriends = friendService.findAllFriends(userA.getId());
 
@@ -187,10 +185,9 @@ class FriendControllerTest {
 
         String url = "http://localhost:" + port + "/friend/" + userB.getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
 
         //when
-        mvc.perform(delete(url).cookie(accessToken))
+        mvc.perform(delete(url).header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
         //then
         List<FriendListDto> allFriends = friendService.findAllFriends(userA.getId());
