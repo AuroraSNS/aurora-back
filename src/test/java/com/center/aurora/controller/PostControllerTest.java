@@ -8,9 +8,8 @@ import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
 import com.center.aurora.service.post.PostService;
-import com.center.aurora.service.post.dto.PostCreateRequestDto;
+import com.center.aurora.service.post.dto.PostDto;
 import com.center.aurora.service.post.dto.PostResponse;
-import com.center.aurora.utils.CookieUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,13 +78,13 @@ public class PostControllerTest {
 
         String url = "http://localhost:" + port + "/posts";
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
+
 
         //when
         mvc.perform(post(url)
                         .param("content", "content1")
                         .param("mood", "sun")
-                        .cookie(accessToken))
+                .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
         //then
@@ -106,8 +104,8 @@ public class PostControllerTest {
         userRepository.save(userA);
         userRepository.save(userB);
 
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").build();
-        PostCreateRequestDto postDto2 = PostCreateRequestDto.builder().mood(Mood.moon).content("content2").build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").build();
 
         postService.createPost(userA.getId(), postDto);
         postService.createPost(userB.getId(), postDto2);
@@ -115,10 +113,9 @@ public class PostControllerTest {
         //when
         String url = "http://localhost:" + port + "/posts/all?page=0";
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
 
         //then
-        mvc.perform(get(url).cookie(accessToken))
+        mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -132,8 +129,8 @@ public class PostControllerTest {
         userRepository.save(userA);
         userRepository.save(userB);
 
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").build();
-        PostCreateRequestDto postDto2 = PostCreateRequestDto.builder().mood(Mood.moon).content("content2").build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").build();
 
         postService.createPost(userA.getId(), postDto);
         postService.createPost(userB.getId(), postDto2);
@@ -141,10 +138,9 @@ public class PostControllerTest {
         //when
         String url = "http://localhost:" + port + "/posts/" + userA.getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
 
         //then
-        mvc.perform(get(url).cookie(accessToken))
+        mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -156,9 +152,9 @@ public class PostControllerTest {
         User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
         userRepository.save(userA);
 
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
 
-        PostResponse post = postService.createPost(userA.getId(), postDto);
+        postService.createPost(userA.getId(), postDto);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getPost(userA.getId(),pageable);
@@ -168,14 +164,13 @@ public class PostControllerTest {
         assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
 
         //when
-        String url = "http://localhost:" + port + "/posts/" + post.getId();
+        String url = "http://localhost:" + port + "/posts/" + result.get(0).getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
 
         mvc.perform(patch(url)
                         .param("content", "content2")
                         .param("mood", "moon")
-                        .cookie(accessToken))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -193,9 +188,9 @@ public class PostControllerTest {
         User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
         userRepository.save(userA);
 
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
 
-        PostResponse post = postService.createPost(userA.getId(), postDto);
+        postService.createPost(userA.getId(), postDto);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getPost(userA.getId(),pageable);
@@ -205,12 +200,11 @@ public class PostControllerTest {
         assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
 
         //when
-        String url = "http://localhost:" + port + "/posts/" + post.getId();
+        String url = "http://localhost:" + port + "/posts/" + result.get(0).getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
-        Cookie accessToken = new Cookie(CookieUtils.ACCESS_TOKEN_NAME, token);
 
         mvc.perform(delete(url)
-                        .cookie(accessToken))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andDo(print());
 

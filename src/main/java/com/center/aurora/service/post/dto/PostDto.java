@@ -8,14 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Getter
-public class PostCreateRequestDto {
+public class PostDto {
 
     Mood mood;
     String content;
     List<MultipartFile> images;
 
     @Builder
-    public PostCreateRequestDto(Mood mood, String content, List<MultipartFile> images) {
+    public PostDto(Mood mood, String content, List<MultipartFile> images) {
         this.mood = mood;
         this.content = content;
         this.images = images;

@@ -6,7 +6,7 @@ import com.center.aurora.domain.user.User;
 import com.center.aurora.repository.post.ImageRepository;
 import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
-import com.center.aurora.service.post.dto.PostCreateRequestDto;
+import com.center.aurora.service.post.dto.PostDto;
 import com.center.aurora.service.post.dto.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,7 +64,7 @@ public class PostServiceTest {
         );
         List<MultipartFile> imageList = new ArrayList<>();
         imageList.add(images);
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("asd").images(imageList).build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
 
         //when
         postService.createPost(userA.getId(), postDto);
@@ -77,7 +77,7 @@ public class PostServiceTest {
             System.out.println(response.toString());
         }
 
-        assertThat(result.get(0).getContent()).isEqualTo("asd");
+        assertThat(result.get(0).getContent()).isEqualTo("content1");
         assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
     }
 
@@ -99,8 +99,8 @@ public class PostServiceTest {
         );
         List<MultipartFile> imageList = new ArrayList<>();
         imageList.add(images);
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
-        PostCreateRequestDto postDto2 = PostCreateRequestDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
 
         //when
         postService.createPost(userA.getId(), postDto);
@@ -138,8 +138,8 @@ public class PostServiceTest {
         );
         List<MultipartFile> imageList = new ArrayList<>();
         imageList.add(images);
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
-        PostCreateRequestDto postDto2 = PostCreateRequestDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
 
         //when
         postService.createPost(userA.getId(), postDto);
@@ -171,7 +171,7 @@ public class PostServiceTest {
         );
         List<MultipartFile> imageList = new ArrayList<>();
         imageList.add(images);
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
 
         //when
         postService.createPost(userA.getId(), postDto);
@@ -184,7 +184,7 @@ public class PostServiceTest {
         assertThat(result.get(0).getContent()).isEqualTo("content1");
         assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
 
-        PostCreateRequestDto postDto2 = PostCreateRequestDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
         postService.updatePost(userA.getId(), result.get(0).getId(), postDto2);
 
         result = postService.getPost(userA.getId(),pageable);
@@ -208,7 +208,7 @@ public class PostServiceTest {
         );
         List<MultipartFile> imageList = new ArrayList<>();
         imageList.add(images);
-        PostCreateRequestDto postDto = PostCreateRequestDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
 
         //when
         postService.createPost(userA.getId(), postDto);

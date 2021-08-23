@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class PostUserDto {
-    Long id;
-    String name;
-    String avatar;
+    private Long id;
+    private String name;
+    private String avatar;
 
     @Builder
     public PostUserDto(Long id, String name, String avatar) {

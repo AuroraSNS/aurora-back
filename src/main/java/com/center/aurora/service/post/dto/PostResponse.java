@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 public class PostResponse {
 
-    Long id;
-    PostUserDto auth;
-    Mood mood;
-    String content;
-    List<String> images;
+    private Long id;
+    private PostUserDto auth;
+    private Mood mood;
+    private String content;
+    private List<String> images;
 
     @Builder
     public PostResponse(Long id, PostUserDto getAllPostUser, Mood mood, String content, List<String> images) {

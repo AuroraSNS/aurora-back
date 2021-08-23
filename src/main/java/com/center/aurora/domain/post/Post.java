@@ -1,5 +1,6 @@
 package com.center.aurora.domain.post;
 
+import com.center.aurora.domain.comment.Comment;
 import com.center.aurora.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,8 +38,11 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Post(User writer, Mood mood, String content) {
