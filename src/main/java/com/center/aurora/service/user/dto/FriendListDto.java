@@ -1,7 +1,6 @@
 package com.center.aurora.service.user.dto;
 
 import com.center.aurora.domain.user.User;
-import com.center.aurora.domain.user.friend.Friend;
 import lombok.Getter;
 
 @Getter
@@ -15,8 +14,8 @@ public class FriendListDto {
         this.name = name;
         this.bio = bio;
     }
-    public static FriendListDto entityToDto(Friend friend){
-        User myFriend = friend.getYou();
+    public static FriendListDto entityToDto(User myFriend){
+
         return new FriendListDto(myFriend.getId(), myFriend.getName(), myFriend.getBio());
     }
 }
