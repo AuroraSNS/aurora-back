@@ -3,9 +3,6 @@ package com.center.aurora.controller;
 import com.center.aurora.config.AppProperties;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.domain.user.friend.Friend;
-import com.center.aurora.domain.user.friend.FriendId;
-import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
 import com.center.aurora.service.user.FriendService;
@@ -47,9 +44,6 @@ class FriendControllerTest {
     private FriendService friendService;
 
     @Autowired
-    private FriendRepository friendRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -67,7 +61,6 @@ class FriendControllerTest {
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .apply(springSecurity())
                 .build();
-        friendRepository.deleteAll();
         userRepository.deleteAll();
     }
 

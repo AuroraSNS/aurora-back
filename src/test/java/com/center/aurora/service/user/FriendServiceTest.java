@@ -2,8 +2,6 @@ package com.center.aurora.service.user;
 
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.domain.user.friend.Friend;
-import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.user.dto.FriendListDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,14 +21,13 @@ class FriendServiceTest {
     private FriendService friendService;
 
     @Autowired
-    private FriendRepository friendRepository;
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
 
     @BeforeEach
     public void dbCleanUp() {
-        friendRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -46,8 +43,8 @@ class FriendServiceTest {
         userRepository.save(userC);
 
         //when
-        friendService.addFriend(userA.getId(), userB.getId());
         friendService.addFriend(userA.getId(), userC.getId());
+        friendService.addFriend(userA.getId(), userB.getId());
 
         //then
         List<FriendListDto> aFriends = friendService.findAllFriends(userA.getId());
@@ -86,5 +83,31 @@ class FriendServiceTest {
         assertThat(bFriends.size()).isEqualTo(1);
         assertThat(bFriends.get(0).getName()).isEqualTo("A");
         assertThat(cFriends.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void User가삭제되면_친구도삭제_돼야한다(){
+        //given
+        User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
+        User userB = User.builder().name("B").email("b@b.com").image("").role(Role.USER).bio("").build();
+        User userC = User.builder().name("C").email("c@c.com").image("").role(Role.USER).bio("").build();
+
+        userRepository.save(userA);
+        userRepository.save(userB);
+        userRepository.save(userC);
+
+        friendService.addFriend(userA.getId(), userB.getId());
+        friendService.addFriend(userB.getId(), userC.getId());
+        //when
+
+//        userService.deleteUserById(userA.getId());
+        userRepository.deleteById(userA.getId());
+        //then
+
+        List<FriendListDto> allFriends = friendService.findAllFriends(userB.getId());
+
+        FriendListDto friend = allFriends.get(0);
+        assertThat(allFriends.size()).isEqualTo(1);
+        assertThat(friend.getName()).isEqualTo("C");
     }
 }

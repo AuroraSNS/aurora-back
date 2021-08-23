@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -37,6 +35,35 @@ public class User {
     @Column
     private String providerId;
 
+    @ManyToMany
+    @JoinTable(name = "friend",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "user_id")
+    )
+    Set<User> friends = new TreeSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "friend",
+            joinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    )
+    Set<User> friendOf = new TreeSet<>();
+
+    public User update(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void addFriends(User friend){
+        this.friends.add(friend);
+        friend.getFriends().add(this);
+    }
+
+    public void deleteFriend(User friend){
+        this.friends.remove(friend);
+        friend.getFriends().remove(this);
+    }
+
     @Builder
     public User(String name, String email, String image, String bio, Role role, AuthProvider provider, String providerId) {
         this.name = name;
@@ -46,6 +73,18 @@ public class User {
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getName(), user.getName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getImage(), user.getImage()) && Objects.equals(getBio(), user.getBio()) && getRole() == user.getRole() && getProvider() == user.getProvider() && Objects.equals(getProviderId(), user.getProviderId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getEmail(), getImage(), getBio(), getRole(), getProvider(), getProviderId());
     }
 
     @Override
@@ -60,23 +99,5 @@ public class User {
                 ", provider=" + provider +
                 ", providerId='" + providerId + '\'' +
                 '}';
-    }
-
-    public User update(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getName(), user.getName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getImage(), user.getImage()) && Objects.equals(getBio(), user.getBio()) && getRole() == user.getRole() && getProvider() == user.getProvider() && Objects.equals(getProviderId(), user.getProviderId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getEmail(), getImage(), getBio(), getRole(), getProvider(), getProviderId());
     }
 }
