@@ -7,6 +7,7 @@ import com.center.aurora.security.oauth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -82,8 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 로그인 폼 비활성화
                 .httpBasic().disable() // 기본 로그인 창 비활성화
                 .authorizeRequests()
-                    .antMatchers("/login", "/oauth2/**","/hello", "/h2-console/**", "/signup", "/profile","/posts/all").permitAll()
-                    .antMatchers( "/**", "/user/me", "/posts/**", "/friend/**").hasRole(Role.USER.name())
+                    .antMatchers(HttpMethod.GET,"/posts/**", "/comments/**").permitAll()
+                    .antMatchers("/login", "/oauth2/**","/hello", "/h2-console/**", "/signup", "/profile").permitAll()
+                    .antMatchers( "/**", "/user/me", "/posts/**", "/friend/**", "/comments/**").hasRole(Role.USER.name())
                     .anyRequest().authenticated()
             .and()
                 .oauth2Login()

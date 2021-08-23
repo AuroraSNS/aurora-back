@@ -2,7 +2,7 @@ package com.center.aurora.controller;
 
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
-import com.center.aurora.service.post.dto.PostCreateRequestDto;
+import com.center.aurora.service.post.dto.PostDto;
 import com.center.aurora.service.post.PostService;
 import com.center.aurora.service.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,17 +30,17 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public PostResponse createPost(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute PostCreateRequestDto postDto) throws IOException {
-        return postService.createPost(userPrincipal.getId(),postDto);
+    public void createPost(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute PostDto postDto) throws IOException {
+        postService.createPost(userPrincipal.getId(),postDto);
     }
 
     @PatchMapping("/posts/{postId}")
-    public PostResponse updatePost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long post_id, @ModelAttribute PostCreateRequestDto postDto) throws IOException {
-        return postService.updatePost(userPrincipal.getId(), post_id, postDto);
+    public void updatePost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long post_id, @ModelAttribute PostDto postDto) throws IOException {
+        postService.updatePost(userPrincipal.getId(), post_id, postDto);
     }
 
     @DeleteMapping("/posts/{postId}")
-    public String deletePost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long post_id) throws IOException {
-        return postService.deletePost(userPrincipal.getId(), post_id);
+    public void deletePost(@CurrentUser UserPrincipal userPrincipal, @PathVariable("postId") Long post_id) throws IOException {
+        postService.deletePost(userPrincipal.getId(), post_id);
     }
 }

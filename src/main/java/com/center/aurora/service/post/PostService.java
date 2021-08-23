@@ -9,7 +9,7 @@ import com.center.aurora.service.post.dto.PostUserDto;
 import com.center.aurora.utils.S3Uploader;
 import com.center.aurora.domain.post.Image;
 import com.center.aurora.repository.post.ImageRepository;
-import com.center.aurora.service.post.dto.PostCreateRequestDto;
+import com.center.aurora.service.post.dto.PostDto;
 import com.center.aurora.domain.post.Post;
 import com.center.aurora.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse createPost(Long user_id, PostCreateRequestDto postDto) throws IOException {
+    public void createPost(Long user_id, PostDto postDto) throws IOException {
         User user = userRepository.findById(user_id).get();
         Post post = Post.builder()
                 .writer(user)
@@ -71,12 +71,10 @@ public class PostService {
 
             imageRepository.save(image);
         }
-
-        return fetchPost(post, images);
     }
 
     @Transactional
-    public PostResponse updatePost(Long user_id, Long post_id, PostCreateRequestDto postDto) throws IOException {
+    public void updatePost(Long user_id, Long post_id, PostDto postDto) throws IOException {
         Post post = postRepository.findById(post_id).get();
         List<String> images = new ArrayList<>();
         if(post.getWriter().getId() == user_id) {
@@ -96,8 +94,6 @@ public class PostService {
 
             post.update(mood, content);
 
-
-
             if (postDto.getImages() != null) {
                 imageRepository.deleteAllByPostId(post);
                 for (MultipartFile imageValue : postDto.getImages()) {
@@ -110,29 +106,21 @@ public class PostService {
                             .build();
                     imageRepository.save(image);
                 }
-            } else {
-                images = imageRepository.findAllImageByPostId(post);
             }
         }else{
             throw new UserAuthException("유저 권한이 없습니다.");
         }
-        return fetchPost(post, images);
     }
 
     @Transactional
-    public String deletePost(Long user_id, Long post_id){
-        String message = "";
+    public void deletePost(Long user_id, Long post_id){
         Post post = postRepository.findById(post_id).get();
 
         if(post.getWriter().getId() == user_id){
-            imageRepository.deleteAllByPostId(post);
             postRepository.deleteById(post_id);
-            message = "게시물이 정상적으로 삭제되었습니다";
         }else{
-            message = "유저 권한이 없습니다.";
+            throw new UserAuthException("유저 권한이 없습니다.");
         }
-
-        return message;
     }
 
     public List<PostResponse> fetchPosts(Page<Post> list){
