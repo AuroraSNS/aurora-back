@@ -16,6 +16,8 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
+    public static final String DEFAULT_IMAGE_URL = "https://aurora-image-bucket.s3.ap-northeast-2.amazonaws.com/aurora/defaultProfile.png";
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
@@ -57,6 +59,12 @@ public class User {
     public User update(String name) {
         this.name = name;
         return this;
+    }
+
+    public void update(String name, String bio, String image){
+        this.name = name;
+        this.bio = bio;
+        this.image = (image.equals(""))? User.DEFAULT_IMAGE_URL : image;
     }
 
     public void addFriends(User friend){
