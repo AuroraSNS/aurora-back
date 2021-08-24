@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 로그인 폼 비활성화
                 .httpBasic().disable() // 기본 로그인 창 비활성화
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.GET,"/posts/**", "/comments/**").permitAll()
+                    .antMatchers(HttpMethod.GET,"/posts/**", "/comments/**", "/mood/**").permitAll()
                     .antMatchers("/login", "/oauth2/**","/hello", "/h2-console/**", "/signup", "/profile").permitAll()
                     .antMatchers( "/**", "/user/me", "/posts/**", "/friend/**", "/comments/**").hasRole(Role.USER.name())
                     .anyRequest().authenticated()

@@ -1,5 +1,6 @@
 package com.center.aurora.controller;
 
+import com.center.aurora.domain.post.Mood;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
 import com.center.aurora.service.post.dto.PostDto;
@@ -18,6 +19,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+
+    @GetMapping("/posts/all/filter")
+    public List<PostResponse> getAllPostByMood(@RequestParam Mood mood, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+        return postService.getAllPostByMood(pageable, mood);
+    }
+
+    @GetMapping("/posts/{userId}/filter")
+    public List<PostResponse> getPostByUserAndMood(@PathVariable("userId") Long user_id, @RequestParam Mood mood, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+        return postService.getPostByUserAndMood(user_id, pageable, mood);
+    }
 
     @GetMapping("/posts/all")
     public List<PostResponse> getAllPosts(@PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {

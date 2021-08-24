@@ -3,8 +3,6 @@ package com.center.aurora.service.post;
 import com.center.aurora.domain.post.Mood;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.repository.post.ImageRepository;
-import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.post.dto.PostDto;
 import com.center.aurora.service.post.dto.PostResponse;
@@ -62,12 +60,8 @@ public class PostServiceTest {
         postService.createPost(userA.getId(), postDto);
 
         //then
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getAllPost(pageable);
-
-        for (PostResponse response : result){
-            System.out.println(response.toString());
-        }
 
         assertThat(result.get(0).getContent()).isEqualTo("content1");
         assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
@@ -99,7 +93,7 @@ public class PostServiceTest {
         postService.createPost(userB.getId(), postDto2);
 
         //then
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getAllPost(pageable);
 
         assertThat(result.get(0).getAuth().getId()).isEqualTo(userB.getId());
@@ -138,9 +132,75 @@ public class PostServiceTest {
         postService.createPost(userB.getId(), postDto2);
 
         //then
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getPost(userA.getId(),pageable);
 
+        assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());
+        assertThat(result.get(0).getContent()).isEqualTo("content1");
+        assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
+
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @DisplayName("날씨 별 게시물 조회")
+    @Test
+    void getAllPostByMood() throws IOException{
+        //given
+        User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
+        User userB = User.builder().name("B").email("b@b.com").image("").role(Role.USER).bio("").build();
+        userRepository.save(userA);
+        userRepository.save(userB);
+
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.sun).content("content2").build();
+        PostDto postDto3 = PostDto.builder().mood(Mood.rain).content("content3").build();
+        PostDto postDto4 = PostDto.builder().mood(Mood.moon).content("content4").build();
+
+        postService.createPost(userA.getId(), postDto);
+        postService.createPost(userB.getId(), postDto2);
+        postService.createPost(userA.getId(), postDto3);
+        postService.createPost(userB.getId(), postDto4);
+
+        //when
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        List<PostResponse> result = postService.getAllPostByMood(pageable,Mood.sun);
+
+        //then
+        assertThat(result.get(0).getAuth().getId()).isEqualTo(userB.getId());
+        assertThat(result.get(0).getContent()).isEqualTo("content2");
+        assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
+
+        assertThat(result.get(1).getAuth().getId()).isEqualTo(userA.getId());
+        assertThat(result.get(1).getContent()).isEqualTo("content1");
+        assertThat(result.get(1).getMood()).isEqualTo(Mood.sun);
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @DisplayName("특정 유저 및 날씨 별 게시물 조회")
+    @Test
+    void getPostByUserAndMood() throws IOException{
+        //given
+        User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
+        User userB = User.builder().name("B").email("b@b.com").image("").role(Role.USER).bio("").build();
+        userRepository.save(userA);
+        userRepository.save(userB);
+
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.sun).content("content2").build();
+        PostDto postDto3 = PostDto.builder().mood(Mood.rain).content("content3").build();
+        PostDto postDto4 = PostDto.builder().mood(Mood.moon).content("content4").build();
+
+        postService.createPost(userA.getId(), postDto);
+        postService.createPost(userB.getId(), postDto2);
+        postService.createPost(userA.getId(), postDto3);
+        postService.createPost(userB.getId(), postDto4);
+
+        //when
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        List<PostResponse> result = postService.getPostByUserAndMood(userA.getId(), pageable, Mood.sun);
+
+        //then
         assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());
         assertThat(result.get(0).getContent()).isEqualTo("content1");
         assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
@@ -167,7 +227,7 @@ public class PostServiceTest {
 
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getPost(userA.getId(),pageable);
 
         assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());
@@ -205,7 +265,7 @@ public class PostServiceTest {
 
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> result = postService.getPost(userA.getId(),pageable);
 
         assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());

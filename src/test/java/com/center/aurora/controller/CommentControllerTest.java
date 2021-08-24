@@ -3,8 +3,6 @@ package com.center.aurora.controller;
 import com.center.aurora.domain.post.Mood;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.repository.post.ImageRepository;
-import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
 import com.center.aurora.service.comment.CommentService;
@@ -79,7 +77,7 @@ public class CommentControllerTest {
         PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         String url = "http://localhost:" + port + "/comments/" + posts.get(0).getId();
@@ -113,7 +111,7 @@ public class CommentControllerTest {
 
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
@@ -124,7 +122,6 @@ public class CommentControllerTest {
 
         //when
         String url = "http://localhost:" + port + "/comments/" + posts.get(0).getId();
-        String token = tokenProvider.createTokenByUserEntity(userA);
 
         //then
         mvc.perform(get(url))
@@ -144,11 +141,10 @@ public class CommentControllerTest {
 
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
-        CommentDto commentDto2 = CommentDto.builder().content("comment2").build();
 
         commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
         List<CommentResponse> comments = commentService.getComment(posts.get(0).getId());
@@ -184,7 +180,7 @@ public class CommentControllerTest {
 
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
