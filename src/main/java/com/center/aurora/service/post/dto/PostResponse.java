@@ -14,24 +14,15 @@ public class PostResponse {
     private Mood mood;
     private String content;
     private List<String> images;
+    private int commentCnt;
 
     @Builder
-    public PostResponse(Long id, PostUserDto getAllPostUser, Mood mood, String content, List<String> images) {
+    public PostResponse(Long id, PostUserDto getAllPostUser, Mood mood, String content, List<String> images, int commentCnt) {
         this.id = id;
         this.auth = getAllPostUser;
         this.mood = mood;
         this.content = content;
         this.images = images;
-    }
-
-    @Override
-    public String toString() {
-        return "PostResponse{" +
-                "id=" + id +
-                ", auth=" + auth +
-                ", mood=" + mood +
-                ", content='" + content + '\'' +
-                ", images=" + images +
-                '}';
+        this.commentCnt = commentCnt;
     }
 }

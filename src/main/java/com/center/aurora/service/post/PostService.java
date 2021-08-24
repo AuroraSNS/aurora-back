@@ -3,6 +3,7 @@ package com.center.aurora.service.post;
 import com.center.aurora.domain.post.Mood;
 import com.center.aurora.domain.user.User;
 import com.center.aurora.exception.UserAuthException;
+import com.center.aurora.repository.comment.CommentRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.post.dto.PostResponse;
 import com.center.aurora.service.post.dto.PostUserDto;
@@ -30,6 +31,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
+    private final CommentRepository commentRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -140,12 +142,15 @@ public class PostService {
                 .avatar(post.getWriter().getImage())
                 .build();
 
+        int commentCnt = commentRepository.findByPostOrderByIdDesc(post).size();
+
         PostResponse postResponse = PostResponse.builder()
                 .id(post.getId())
                 .getAllPostUser(PostUser)
                 .mood(post.getMood())
                 .content(post.getContent())
                 .images(images)
+                .commentCnt(commentCnt)
                 .build();
 
         return postResponse;

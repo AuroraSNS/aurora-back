@@ -28,9 +28,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public List<CommentResponse> getComment(Long post_id, Pageable pageable){
+    public List<CommentResponse> getComment(Long post_id){
         Post post = postRepository.findById(post_id).get();
-        Page<Comment> list = commentRepository.findByPost(pageable, post);
+        List<Comment> list = commentRepository.findByPostOrderByIdDesc(post);
         List<CommentResponse> comments = new ArrayList<>();
 
         for(Comment comment : list){

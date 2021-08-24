@@ -20,12 +20,12 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts/all")
-    public List<PostResponse> getAllPosts(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public List<PostResponse> getAllPosts(@PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
         return postService.getAllPost(pageable);
     }
 
     @GetMapping("/posts/{userId}")
-    public List<PostResponse> getPosts(@PathVariable("userId") Long user_id, @PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public List<PostResponse> getPosts(@PathVariable("userId") Long user_id, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
         return postService.getPost(user_id, pageable);
     }
 

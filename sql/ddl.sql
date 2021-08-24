@@ -1,5 +1,14 @@
 create sequence hibernate_sequence start with 1 increment by 1;
 
+create table comment
+(
+    comment_id bigint not null AUTO_INCREMENT,
+    content TEXT not null,
+    post_id bigint,
+    writer bigint,
+    primary key (comment_id)
+);
+
 create table friend
 (
     me_id  bigint not null,
@@ -58,6 +67,11 @@ create table user
     primary key (user_id)
 );
 
+ALTER TABLE image ADD CONSTRAINT DeleteImageCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
+ALTER TABLE comment ADD CONSTRAINT DeleteCommentCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
+
+alter table comment add constraint FKaqdy2fu25ym7qpn6aajqf7mb2 foreign key (writer) references user(user_id);
+alter table comment add constraint FKs1slvnkuemjsq2kj4h3vhx7i1 foreign key (post_id) references post(post_id);
 alter table friend add constraint FKm8stwgqp91633qd94lj42tsj5 foreign key (me_id) references user (user_id);
 alter table friend add constraint FKgp9n7fvh2clwhl8nrgl652ntq foreign key (you_id) references user (user_id);
 alter table image add constraint FKe2l07hc93u2bbjnl80meu3rn4 foreign key (post_id) references post (post_id);

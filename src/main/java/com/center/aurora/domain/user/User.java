@@ -1,5 +1,7 @@
 package com.center.aurora.domain.user;
 
+import com.center.aurora.domain.post.Image;
+import com.center.aurora.domain.post.Post;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,6 +50,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     )
     Set<User> friendOf = new TreeSet<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.REMOVE)
+    List<Post> posts = new ArrayList<>();
 
     public User update(String name) {
         this.name = name;
