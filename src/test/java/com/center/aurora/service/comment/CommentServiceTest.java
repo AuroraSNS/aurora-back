@@ -3,8 +3,6 @@ package com.center.aurora.service.comment;
 import com.center.aurora.domain.post.Mood;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.repository.post.ImageRepository;
-import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.comment.dto.CommentDto;
 import com.center.aurora.service.comment.dto.CommentResponse;
@@ -64,7 +62,7 @@ public class CommentServiceTest {
         PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
 
         postService.createPost(userA.getId(), postDto);
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
@@ -99,7 +97,7 @@ public class CommentServiceTest {
 
         postService.createPost(userA.getId(), postDto);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
@@ -137,7 +135,7 @@ public class CommentServiceTest {
         PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
 
         postService.createPost(userA.getId(), postDto);
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
@@ -174,7 +172,7 @@ public class CommentServiceTest {
         PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
 
         postService.createPost(userA.getId(), postDto);
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
         CommentDto commentDto = CommentDto.builder().content("comment1").build();

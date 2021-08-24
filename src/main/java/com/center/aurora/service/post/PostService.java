@@ -48,6 +48,21 @@ public class PostService {
     }
 
     @Transactional
+    public List<PostResponse> getAllPostByMood(Pageable pageable, Mood mood){
+        Page<Post> list = postRepository.findAllByMood(pageable,mood);
+
+        return fetchPosts(list);
+    }
+
+    @Transactional
+    public List<PostResponse> getPostByUserAndMood(Long user_id, Pageable pageable, Mood mood){
+        User user = userRepository.findById(user_id).get();
+        Page<Post> list = postRepository.findAllByMoodAndWriter(pageable,mood,user);
+
+        return fetchPosts(list);
+    }
+
+    @Transactional
     public void createPost(Long user_id, PostDto postDto) throws IOException {
         User user = userRepository.findById(user_id).get();
         Post post = Post.builder()
