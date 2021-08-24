@@ -19,8 +19,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping ("/comments/{postId}")
-    public List<CommentResponse> getComment(@PathVariable("postId") Long post_id, @PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
-        return commentService.getComment(post_id,pageable);
+    public List<CommentResponse> getComment(@PathVariable("postId") Long post_id){
+        return commentService.getComment(post_id);
     }
 
     @PostMapping("/comments/{postId}")

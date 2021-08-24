@@ -7,9 +7,13 @@ import com.center.aurora.repository.post.ImageRepository;
 import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
+import com.center.aurora.service.comment.CommentService;
+import com.center.aurora.service.comment.dto.CommentDto;
+import com.center.aurora.service.comment.dto.CommentResponse;
 import com.center.aurora.service.post.PostService;
 import com.center.aurora.service.post.dto.PostDto;
 import com.center.aurora.service.post.dto.PostResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +23,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -33,9 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostControllerTest {
+public class CommentControllerTest {
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private PostService postService;
@@ -61,33 +69,38 @@ public class PostControllerTest {
         userRepository.deleteAll();
     }
 
-    @DisplayName("게시물 생성")
+    @DisplayName("댓글 생성")
     @Test
     public void createPost() throws Exception{
         //given
         User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
         userRepository.save(userA);
 
-        String url = "http://localhost:" + port + "/posts";
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
+        postService.createPost(userA.getId(), postDto);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
+
+        String url = "http://localhost:" + port + "/comments/" + posts.get(0).getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
 
         //when
         mvc.perform(post(url)
-                        .param("content", "content1")
-                        .param("mood", "sun")
-                .header("Authorization", "Bearer " + token))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString("comment1"))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andDo(print());
 
         //then
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
-        List<PostResponse> result = postService.getAllPost(pageable);
+        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
 
-        assertThat(result.get(0).getContent()).isEqualTo("content1");
-        assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
+        assertThat(result.get(0).getContent()).isEqualTo("comment1");
     }
 
-    @DisplayName("모든 게시물 조회")
+    @DisplayName("댓글 조회")
     @Test
     void getAllPost() throws Exception {
         //given
@@ -97,13 +110,20 @@ public class PostControllerTest {
         userRepository.save(userB);
 
         PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
-        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").build();
 
         postService.createPost(userA.getId(), postDto);
-        postService.createPost(userB.getId(), postDto2);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
+
+        CommentDto commentDto = CommentDto.builder().content("comment1").build();
+        CommentDto commentDto2 = CommentDto.builder().content("comment2").build();
+
+        commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
+        commentService.createComment(userB.getId(),posts.get(0).getId(), commentDto2);
 
         //when
-        String url = "http://localhost:" + port + "/posts/all?page=0";
+        String url = "http://localhost:" + port + "/comments/" + posts.get(0).getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
 
         //then
@@ -112,32 +132,8 @@ public class PostControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("특정 유저 게시물 조회")
-    @Test
-    void getPost() throws Exception {
-        //given
-        User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
-        User userB = User.builder().name("B").email("b@b.com").image("").role(Role.USER).bio("").build();
-        userRepository.save(userA);
-        userRepository.save(userB);
 
-        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").build();
-        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").build();
-
-        postService.createPost(userA.getId(), postDto);
-        postService.createPost(userB.getId(), postDto2);
-
-        //when
-        String url = "http://localhost:" + port + "/posts/" + userA.getId();
-        String token = tokenProvider.createTokenByUserEntity(userA);
-
-        //then
-        mvc.perform(get(url))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @DisplayName("게시물 수정")
+    @DisplayName("댓글 수정")
     @Test
     void updatePost() throws Exception{
         //given
@@ -149,28 +145,32 @@ public class PostControllerTest {
         postService.createPost(userA.getId(), postDto);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
-        List<PostResponse> result = postService.getPost(userA.getId(),pageable);
+        List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
-        assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());
-        assertThat(result.get(0).getContent()).isEqualTo("content1");
-        assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
+        CommentDto commentDto = CommentDto.builder().content("comment1").build();
+        CommentDto commentDto2 = CommentDto.builder().content("comment2").build();
+
+        commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
+        List<CommentResponse> comments = commentService.getComment(posts.get(0).getId());
+
+        assertThat(comments.get(0).getContent()).isEqualTo("comment1");
 
         //when
-        String url = "http://localhost:" + port + "/posts/" + result.get(0).getId();
+        String url = "http://localhost:" + port + "/comments/" + comments.get(0).getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
 
         mvc.perform(patch(url)
-                        .param("content", "content2")
-                        .param("mood", "moon")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString("comment2"))
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andDo(print());
 
         //then
-        result = postService.getPost(userA.getId(),pageable);
+        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
 
-        assertThat(result.get(0).getContent()).isEqualTo("content2");
-        assertThat(result.get(0).getMood()).isEqualTo(Mood.moon);
+        assertThat(result.get(0).getContent()).isEqualTo("comment2");
     }
 
     @DisplayName("게시물 삭제")
@@ -185,14 +185,17 @@ public class PostControllerTest {
         postService.createPost(userA.getId(), postDto);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
-        List<PostResponse> result = postService.getPost(userA.getId(),pageable);
+        List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
 
-        assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());
-        assertThat(result.get(0).getContent()).isEqualTo("content1");
-        assertThat(result.get(0).getMood()).isEqualTo(Mood.sun);
+        CommentDto commentDto = CommentDto.builder().content("comment1").build();
+
+        commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
+        List<CommentResponse> comments = commentService.getComment(posts.get(0).getId());
+
+        assertThat(comments.get(0).getContent()).isEqualTo("comment1");
 
         //when
-        String url = "http://localhost:" + port + "/posts/" + result.get(0).getId();
+        String url = "http://localhost:" + port + "/comments/" + comments.get(0).getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
 
         mvc.perform(delete(url)
@@ -201,8 +204,7 @@ public class PostControllerTest {
                 .andDo(print());
 
         //then
-        result = postService.getPost(userA.getId(),pageable);
-
+        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
         assertThat(result.size()).isEqualTo(0);
     }
 }
