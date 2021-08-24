@@ -67,7 +67,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             if(!user.getProvider().equals(AuthProvider.valueOf(userRequest.getClientRegistration().getRegistrationId()))){
                 throw  new OAuth2AuthenticationProcessingException(user.getProvider() + "계정을 사용하기 위해서 로그인을 해야합니다.");
             }
-            user = updateExistingUser(user, oAuth2UserInfo);
+            //이미 존재하는 회원 사이트로 부터 변경된 정보 업데이트.
+            //user = updateExistingUser(user, oAuth2UserInfo);
         }else{
             log.info("새로운 회원 등록");
             user = registerNewUser(userRequest, oAuth2UserInfo);
@@ -86,13 +87,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return userRepository.save(User.builder()
                 .name(oAuth2UserInfo.getName())
                 .email(oAuth2UserInfo.getEmail())
-                .image("") // TODO 디폴트 이미지
+                .image(User.DEFAULT_IMAGE_URL)
                 .role(Role.USER)
                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))
                 .providerId(oAuth2UserInfo.getId())
                 .build()
         );
     }
+
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
 
         return userRepository.save(existingUser
