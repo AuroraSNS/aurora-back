@@ -67,6 +67,7 @@ create table user
     primary key (user_id)
 );
 
+ALTER TABLE post ADD CONSTRAINT DeletePostCascade FOREIGN KEY (writer) REFERENCES user(user_id) ON DELETE CASCADE;
 ALTER TABLE image ADD CONSTRAINT DeleteImageCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 ALTER TABLE comment ADD CONSTRAINT DeleteCommentCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 

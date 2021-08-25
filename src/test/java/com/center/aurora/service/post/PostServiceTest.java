@@ -161,9 +161,12 @@ public class PostServiceTest {
         postService.createPost(userA.getId(), postDto3);
         postService.createPost(userB.getId(), postDto4);
 
+        List<Mood> moodList = new ArrayList<>();
+        moodList.add(Mood.sun);
+
         //when
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
-        List<PostResponse> result = postService.getAllPostByMood(pageable,Mood.sun);
+        List<PostResponse> result = postService.getAllPostByMood(pageable,moodList);
 
         //then
         assertThat(result.get(0).getAuth().getId()).isEqualTo(userB.getId());
@@ -196,9 +199,12 @@ public class PostServiceTest {
         postService.createPost(userA.getId(), postDto3);
         postService.createPost(userB.getId(), postDto4);
 
+        List<Mood> moodList = new ArrayList<>();
+        moodList.add(Mood.sun);
+
         //when
         Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
-        List<PostResponse> result = postService.getPostByUserAndMood(userA.getId(), pageable, Mood.sun);
+        List<PostResponse> result = postService.getPostByUserAndMood(userA.getId(), pageable, moodList);
 
         //then
         assertThat(result.get(0).getAuth().getId()).isEqualTo(userA.getId());

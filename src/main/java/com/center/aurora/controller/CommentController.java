@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping ("/comments/{postId}")
-    public List<CommentResponse> getComment(@PathVariable("postId") Long post_id){
+    public Map getComment(@PathVariable("postId") Long post_id){
         return commentService.getComment(post_id);
     }
 

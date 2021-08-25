@@ -71,7 +71,7 @@ public class CommentServiceTest {
         commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
 
         //then
-        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
+        List<CommentResponse> result = (List<CommentResponse>) commentService.getComment(posts.get(0).getId()).get("comments");
 
         assertThat(result.get(0).getContent()).isEqualTo("comment1");
     }
@@ -108,7 +108,7 @@ public class CommentServiceTest {
         commentService.createComment(userB.getId(),posts.get(0).getId(), commentDto2);
 
         //then
-        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
+        List<CommentResponse> result = (List<CommentResponse>) commentService.getComment(posts.get(0).getId()).get("comments");
 
         assertThat(result.get(1).getContent()).isEqualTo("comment1");
         assertThat(result.get(1).getAuth().getId()).isEqualTo(userA.getId());
@@ -142,7 +142,7 @@ public class CommentServiceTest {
         CommentDto commentDto2 = CommentDto.builder().content("comment2").build();
 
         commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
-        List<CommentResponse> comments = commentService.getComment(posts.get(0).getId());
+        List<CommentResponse> comments = (List<CommentResponse>) commentService.getComment(posts.get(0).getId()).get("comments");
 
         assertThat(comments.get(0).getContent()).isEqualTo("comment1");
 
@@ -150,7 +150,7 @@ public class CommentServiceTest {
         commentService.updateComment(userA.getId(),comments.get(0).getId(),commentDto2);
 
         //then
-        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
+        List<CommentResponse> result = (List<CommentResponse>) commentService.getComment(posts.get(0).getId()).get("comments");
         assertThat(result.get(0).getContent()).isEqualTo("comment2");
     }
 
@@ -178,7 +178,7 @@ public class CommentServiceTest {
         CommentDto commentDto = CommentDto.builder().content("comment1").build();
 
         commentService.createComment(userA.getId(),posts.get(0).getId(), commentDto);
-        List<CommentResponse> comments = commentService.getComment(posts.get(0).getId());
+        List<CommentResponse> comments = (List<CommentResponse>) commentService.getComment(posts.get(0).getId()).get("comments");
 
         assertThat(comments.get(0).getContent()).isEqualTo("comment1");
 
@@ -186,7 +186,7 @@ public class CommentServiceTest {
         commentService.deleteComment(userA.getId(),comments.get(0).getId());
 
         //then
-        List<CommentResponse> result = commentService.getComment(posts.get(0).getId());
+        List<CommentResponse> result = (List<CommentResponse>) commentService.getComment(posts.get(0).getId()).get("comments");
         assertThat(result.size()).isEqualTo(0);
     }
 

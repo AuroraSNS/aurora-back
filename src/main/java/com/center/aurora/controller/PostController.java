@@ -21,12 +21,12 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts/all/filter")
-    public List<PostResponse> getAllPostByMood(@RequestParam Mood mood, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+    public List<PostResponse> getAllPostByMood(@RequestParam List<Mood> mood, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
         return postService.getAllPostByMood(pageable, mood);
     }
 
     @GetMapping("/posts/{userId}/filter")
-    public List<PostResponse> getPostByUserAndMood(@PathVariable("userId") Long user_id, @RequestParam Mood mood, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+    public List<PostResponse> getPostByUserAndMood(@PathVariable("userId") Long user_id, @RequestParam List<Mood> mood, @PageableDefault(size=5, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
         return postService.getPostByUserAndMood(user_id, pageable, mood);
     }
 
