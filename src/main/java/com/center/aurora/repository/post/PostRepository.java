@@ -14,7 +14,6 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long>{
     Page<Post> findAll(Pageable pageable);
     Page<Post> findAllByWriter(Pageable pageable, User writer);
-    Page<Post> findAllByMood(Pageable pageable, Mood mood);
     Page<Post> findAllByMoodAndWriter(Pageable pageable, Mood mood, User writer);
 
     @Query("Select p.mood From Post p")

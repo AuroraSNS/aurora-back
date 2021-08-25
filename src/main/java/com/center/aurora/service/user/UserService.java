@@ -46,6 +46,6 @@ public class UserService {
     }
 
     private void fileDelete(String url){
-        // TODO url에 있는 파일 삭제 구현
+        s3Uploader.deleteFile(url,"aurora");
     }
 }

@@ -12,13 +12,13 @@ import com.center.aurora.service.comment.dto.CommentDto;
 import com.center.aurora.service.comment.dto.CommentResponse;
 import com.center.aurora.service.post.dto.PostUserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +28,10 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public List<CommentResponse> getComment(Long post_id){
+    public Map getComment(Long post_id){
         Post post = postRepository.findById(post_id).get();
+        Map result = new HashMap();
+
         List<Comment> list = commentRepository.findByPostOrderByIdDesc(post);
         List<CommentResponse> comments = new ArrayList<>();
 
@@ -47,7 +49,12 @@ public class CommentService {
                     .build();
             comments.add(commentResponse);
         }
-        return comments;
+
+        int commentCnt = commentRepository.findByPostOrderByIdDesc(post).size();
+
+        result.put("comments", comments);
+        result.put("commentCnt", commentCnt);
+        return result;
     }
 
     @Transactional
