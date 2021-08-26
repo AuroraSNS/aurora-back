@@ -39,6 +39,8 @@ public class User {
     @Column
     private String providerId;
 
+    private String password;
+
     @ManyToMany
     @JoinTable(name = "friend",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
@@ -78,7 +80,7 @@ public class User {
     }
 
     @Builder
-    public User(String name, String email, String image, String bio, Role role, AuthProvider provider, String providerId) {
+    public User(String name, String email, String image, String bio, Role role, AuthProvider provider, String providerId, String password) {
         this.name = name;
         this.email = email;
         this.image = image;
@@ -86,6 +88,7 @@ public class User {
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+        this.password = password;
     }
     @Override
     public boolean equals(Object o) {
