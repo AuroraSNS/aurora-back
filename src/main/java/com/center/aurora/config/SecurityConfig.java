@@ -85,10 +85,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers(HttpMethod.GET,"/posts/**", "/comments/**", "/mood/**", "/user/{id}").permitAll()
                     .antMatchers("/login","/hello", "/h2-console/**", "/profile" //for dev
+                            ,"/ws-stomp/**" // for STOMP
                             ,"/oauth2/**" // for Oauth
                             ,"/v2/**", "/configuration/**", "/swagger*/**", "/webjars/**", "/swagger-resources/**" //for swagger
                     ).permitAll()
                     .antMatchers( "/**", "/user/**", "/posts/**", "/friend/**", "/comments/**","/likes/**").hasRole(Role.USER.name())
+                    .antMatchers( "/**", "/user/**", "/posts/**", "/friend/**", "/comments/**" , "/chat/**").hasRole(Role.USER.name())
                     .anyRequest().authenticated()
             .and()
                 .oauth2Login()

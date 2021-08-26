@@ -16,7 +16,6 @@ import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,8 +55,8 @@ public class UserController {
     public void updateUser(@CurrentUser UserPrincipal user,
 //                           @ModelAttribute UserUpdateDto updateDto
                             @RequestParam(value = "image", required = false) MultipartFile image,
-                            @RequestParam("name") String name,
-                            @RequestParam("bio") String bio,
+                            @RequestParam(value = "name") String name,
+                            @RequestParam(value = "bio", required = false) String bio,
                             @RequestParam(value = "isImageChanged") Boolean isImageChanged
     ) throws IOException {
 
