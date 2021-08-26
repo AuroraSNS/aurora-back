@@ -4,10 +4,10 @@ import com.center.aurora.domain.post.Mood;
 import com.center.aurora.domain.user.User;
 import com.center.aurora.exception.UserAuthException;
 import com.center.aurora.repository.comment.CommentRepository;
+import com.center.aurora.repository.like.LikeRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.post.dto.PostResponse;
 import com.center.aurora.service.post.dto.PostUserDto;
-import com.center.aurora.service.user.dto.FriendListDto;
 import com.center.aurora.utils.S3Uploader;
 import com.center.aurora.domain.post.Image;
 import com.center.aurora.repository.post.ImageRepository;
@@ -35,6 +35,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
@@ -189,7 +190,7 @@ public class PostService {
                 .build();
 
         int commentCnt = commentRepository.findByPostOrderByIdDesc(post).size();
-
+        int likeCnt = likeRepository.findAllByPost(post);
         PostResponse postResponse = PostResponse.builder()
                 .id(post.getId())
                 .getAllPostUser(PostUser)
@@ -197,6 +198,7 @@ public class PostService {
                 .content(post.getContent())
                 .images(images)
                 .commentCnt(commentCnt)
+                .likeCnt(likeCnt)
                 .build();
 
         return postResponse;

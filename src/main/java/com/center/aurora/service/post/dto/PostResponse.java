@@ -15,14 +15,16 @@ public class PostResponse {
     private String content;
     private List<String> images;
     private int commentCnt;
+    private int likeCnt;
 
     @Builder
-    public PostResponse(Long id, PostUserDto getAllPostUser, Mood mood, String content, List<String> images, int commentCnt) {
+    public PostResponse(Long id, PostUserDto getAllPostUser, Mood mood, String content, List<String> images, int commentCnt, int likeCnt) {
         this.id = id;
         this.auth = getAllPostUser;
         this.mood = mood;
         this.content = content;
         this.images = images;
         this.commentCnt = commentCnt;
+        this.likeCnt = likeCnt;
     }
 }
