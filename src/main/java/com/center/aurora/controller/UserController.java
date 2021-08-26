@@ -2,6 +2,7 @@ package com.center.aurora.controller;
 
 import com.center.aurora.domain.user.User;
 import com.center.aurora.exception.ResourceNotFoundException;
+import com.center.aurora.repository.like.LikeRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ import java.io.IOException;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
     private final UserService userService;
 
     @GetMapping("/user")
@@ -36,7 +39,8 @@ public class UserController {
     @ApiResponse(code = 200, message = "success", response = UserMeDto.class)
     public UserMeDto getCurrentUser(@CurrentUser UserPrincipal user) {
         User me = userRepository.findById(user.getId()).get();
-        return new UserMeDto(me);
+        List<Long> likeList = likeRepository.findAllPostIdByWriter(me);
+        return new UserMeDto(me,likeList);
     }
 
     @GetMapping("/user/{id}")

@@ -1,6 +1,7 @@
 package com.center.aurora.domain.post;
 
 import com.center.aurora.domain.comment.Comment;
+import com.center.aurora.domain.like.Like;
 import com.center.aurora.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,6 +44,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    List<Like> likes = new ArrayList<>();
 
     @Builder
     public Post(User writer, Mood mood, String content) {
