@@ -13,6 +13,8 @@ import java.util.Date;
 @Service
 public class TokenProvider {
 
+    public static String ACCESS_TOKEN_NAME = "Authorization";
+
     private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private AppProperties appProperties;

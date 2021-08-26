@@ -11,9 +11,9 @@ create table comment
 
 create table friend
 (
-    me_id  bigint not null,
-    you_id bigint not null,
-    primary key (me_id, you_id)
+    user_id   bigint not null,
+    friend_id bigint not null,
+    primary key (friend_id, user_id)
 );
 
 create table hello_entity
@@ -67,15 +67,39 @@ create table user
     primary key (user_id)
 );
 
+create table chat_room
+(
+    room_id              bigint NOT NULL AUTO_INCREMENT,
+    participant1_user_id bigint,
+    participant2_user_id bigint,
+    primary key (room_id)
+);
+
+create table message
+(
+    message_id bigint NOT NULL AUTO_INCREMENT,
+    message    varchar(255),
+    time_stamp timestamp,
+    room_id    bigint,
+    user_id    bigint,
+    primary key (message_id)
+);
+
+
 ALTER TABLE post ADD CONSTRAINT DeletePostCascade FOREIGN KEY (writer) REFERENCES user(user_id) ON DELETE CASCADE;
 ALTER TABLE image ADD CONSTRAINT DeleteImageCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 ALTER TABLE comment ADD CONSTRAINT DeleteCommentCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 
 alter table comment add constraint FKaqdy2fu25ym7qpn6aajqf7mb2 foreign key (writer) references user(user_id);
 alter table comment add constraint FKs1slvnkuemjsq2kj4h3vhx7i1 foreign key (post_id) references post(post_id);
-alter table friend add constraint FKm8stwgqp91633qd94lj42tsj5 foreign key (me_id) references user (user_id);
-alter table friend add constraint FKgp9n7fvh2clwhl8nrgl652ntq foreign key (you_id) references user (user_id);
+alter table friend add constraint FKm8stwgqp91633qd94lj42tsj5 foreign key (user_id) references user (user_id);
+alter table friend add constraint FKgp9n7fvh2clwhl8nrgl652ntq foreign key (friend_id) references user (user_id);
 alter table image add constraint FKe2l07hc93u2bbjnl80meu3rn4 foreign key (post_id) references post (post_id);
 alter table notification add constraint FK2yifcahfjv13yy7xj33xa606y foreign key (recipient) references user (user_id);
 alter table notification add constraint FKbtvkivatoh9yitle5unojiqt4 foreign key (writer_id) references user (user_id);
 alter table post add constraint FKck6542xnt1axiyqjlceoc7khj foreign key (writer) references user (user_id);
+
+alter table chat_room add constraint FKgcssea4yrfkpr8yt6ke3tvsv foreign key (participant1_user_id) references user(user_id);
+alter table chat_room add constraint FK23jtigsqgksqupo5xfh985m42 foreign key (participant2_user_id) references user(user_id);
+alter table message add constraint FKq97urb0l1mxmmjl54tmlya11f foreign key (room_id) references chat_room(room_id);
+alter table message add constraint FKb3y6etti1cfougkdr0qiiemgv foreign key (user_id) references user(user_id);

@@ -9,7 +9,6 @@ import java.util.Base64;
 import java.util.Optional;
 
 public class CookieUtils {
-    public static String ACCESS_TOKEN_NAME = "Authorization";
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
