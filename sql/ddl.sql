@@ -61,6 +61,7 @@ create table user
     email       varchar(255),
     image       varchar(255),
     name        varchar(255),
+    password    varchar(255),
     provider    varchar(255),
     provider_id varchar(255),
     role        varchar(255),
@@ -85,11 +86,19 @@ create table message
     primary key (message_id)
 );
 
+create table likes (
+    post_id bigint not null,
+    writer bigint not null,
+    primary key (post_id, writer)
+);
 
+ALTER TABLE likes ADD CONSTRAINT DeleteLikesCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 ALTER TABLE post ADD CONSTRAINT DeletePostCascade FOREIGN KEY (writer) REFERENCES user(user_id) ON DELETE CASCADE;
 ALTER TABLE image ADD CONSTRAINT DeleteImageCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 ALTER TABLE comment ADD CONSTRAINT DeleteCommentCascade FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE;
 
+alter table likes add constraint FKc7o2t2k4ndpg29hj446mml6ol foreign key (writer) references user(user_id);
+alter table likes add constraint FKowd6f4s7x9f3w50pvlo6x3b41 foreign key (post_id) references post(post_id);
 alter table comment add constraint FKaqdy2fu25ym7qpn6aajqf7mb2 foreign key (writer) references user(user_id);
 alter table comment add constraint FKs1slvnkuemjsq2kj4h3vhx7i1 foreign key (post_id) references post(post_id);
 alter table friend add constraint FKm8stwgqp91633qd94lj42tsj5 foreign key (user_id) references user (user_id);
