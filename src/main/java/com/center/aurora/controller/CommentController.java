@@ -4,14 +4,9 @@ import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
 import com.center.aurora.service.comment.CommentService;
 import com.center.aurora.service.comment.dto.CommentDto;
-import com.center.aurora.service.comment.dto.CommentResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

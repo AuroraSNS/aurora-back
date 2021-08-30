@@ -23,7 +23,7 @@ public class TokenProvider {
         this.appProperties = appProperties;
     }
 
-    public String createToken(Authentication authentication){
+    public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
@@ -35,10 +35,11 @@ public class TokenProvider {
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
                 .compact();
     }
-    public String createTokenByUserEntity(User user){
 
+    public String createTokenByUserEntity(User user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+
         return Jwts.builder()
                 .setSubject(Long.toString(user.getId()))
                 .setIssuedAt(new Date())
@@ -47,7 +48,7 @@ public class TokenProvider {
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token){
+    public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(appProperties.getAuth().getTokenSecret())
                 .parseClaimsJws(token)
