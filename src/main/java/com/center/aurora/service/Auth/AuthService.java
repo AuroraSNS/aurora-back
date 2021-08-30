@@ -3,36 +3,37 @@ package com.center.aurora.service.Auth;
 import com.center.aurora.domain.user.AuthProvider;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.exception.CustomException;
-import com.center.aurora.exception.dto.ErrorCode;
 import com.center.aurora.repository.user.UserRepository;
+import com.center.aurora.security.TokenProvider;
 import com.center.aurora.service.Auth.Dto.AuthDto;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.center.aurora.service.Auth.Dto.Message;
+import com.center.aurora.service.Auth.Dto.SignInResponse;
+import com.center.aurora.utils.Validators;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.ZonedDateTime;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Value("${app.auth.tokenSecret}")
-    private String tokenSecret;
+    private final TokenProvider tokenProvider;
+    private final Validators validators;
 
     @Transactional
-    public Long signUp(AuthDto authDto){
-        if (userRepository.existsByEmail(authDto.getEmail())) {
-            throw new CustomException(ErrorCode.DUPLICATED_EMAIL);
+    public ResponseEntity<String> signUp(AuthDto authDto) {
+        Message validate = validators.validateSignUp(authDto.getEmail(), authDto.getName(), authDto.getPassword(), authDto.getPasswordConfirm());
+
+        if (validate.getStatusCode()!=null) {
+            return new ResponseEntity<>(validate.getMessage(),validate.getStatusCode());
         }
-        return userRepository.save(User.builder()
+
+        userRepository.save(User.builder()
                 .name(authDto.getName())
                 .email(authDto.getEmail())
                 .image(User.DEFAULT_IMAGE_URL)
@@ -40,38 +41,30 @@ public class AuthService {
                 .provider(AuthProvider.local)
                 .password(passwordEncoder.encode(authDto.getPassword()))
                 .build()
-        ).getId();
+        );
+
+        return new ResponseEntity<>("회원 가입이 성공적으로 완료되었습니다!", HttpStatus.CREATED);
     }
 
     @Transactional
-    public Map signIn(AuthDto authDto){
-        Map result = new HashMap();
-        String token = null;
-        Optional<User> optionalUser = userRepository.findByEmail(authDto.getEmail());
-        if(!optionalUser.isEmpty()){
-            User user = optionalUser.get();
-            if(passwordEncoder.matches(authDto.getPassword(),user.getPassword())){
-                token = createTokenByUserEntity(user);
-            }else{
-                if(optionalUser.get().getProvider()!= AuthProvider.local){
-                    throw new CustomException(ErrorCode.BAD_LOGIN_PROVIDER);
-                }else{
-                    throw new CustomException(ErrorCode.BAD_LOGIN_PASSWORD);
-                }
-            }
-        }else{
-            throw new CustomException(ErrorCode.BAD_LOGIN_EMAIL);
-        }
-        result.put("accessToken", token);
-        return result;
-    }
+    public ResponseEntity<SignInResponse> signIn(AuthDto authDto) {
+        Message validate = validators.validateSignInUser(authDto.getEmail(), authDto.getPassword());
+        SignInResponse signupResponse;
 
-    public String createTokenByUserEntity(User user){
-        return Jwts.builder()
-                .setSubject(Long.toString(user.getId()))
-                .setIssuedAt(new Date())
-                .setExpiration(Date.from(ZonedDateTime.now().plusDays(1).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, tokenSecret)
-                .compact();
+        if (validate.getStatusCode()!=null) {
+            signupResponse = SignInResponse.builder()
+                    .message(validate.getMessage())
+                    .token(null)
+                    .build();
+            return new ResponseEntity<>(signupResponse,validate.getStatusCode());
+        }
+
+        User user = userRepository.findByEmail(authDto.getEmail()).get();
+        signupResponse = SignInResponse.builder()
+                .message("로그인 성공했습니다")
+                .token(tokenProvider.createTokenByUserEntity(user))
+                .build();
+
+        return new ResponseEntity<>(signupResponse, HttpStatus.OK);
     }
 }
