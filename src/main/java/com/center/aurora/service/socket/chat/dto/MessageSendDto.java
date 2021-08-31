@@ -1,4 +1,4 @@
-package com.center.aurora.service.chat.dto;
+package com.center.aurora.service.socket.chat.dto;
 
 import com.center.aurora.domain.chat.Message;
 import com.center.aurora.domain.user.User;

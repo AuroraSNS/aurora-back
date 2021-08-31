@@ -1,5 +1,6 @@
 package com.center.aurora.security;
 
+import antlr.Token;
 import com.center.aurora.exception.NoCookieException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +34,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         try{
             String jwt = getJwtFromRequest(request);
+//            if(jwt.equals("")) {
+//                for (Cookie cookie : request.getCookies()) {
+//                    if (cookie.getName().equals(TokenProvider.ACCESS_TOKEN_NAME)) {
+//                        jwt = cookie.getValue();
+//                        break;
+//                    }
+//                }
+//            }
 
             if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
                 Long userId = tokenProvider.getUserIdFromToken(jwt);
-
                 UserDetails userDetails = customUSerDetailsService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                         null, userDetails.getAuthorities());

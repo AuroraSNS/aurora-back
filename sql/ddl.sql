@@ -32,11 +32,14 @@ create table image
     primary key (image_id)
 );
 
+
 create table notification
 (
     id         bigint NOT NULL AUTO_INCREMENT,
     created_at timestamp,
+    message    varchar(255),
     status     varchar(255),
+    target_id  bigint,
     type       varchar(255),
     recipient  bigint,
     writer_id  bigint,

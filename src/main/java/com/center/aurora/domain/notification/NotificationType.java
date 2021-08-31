@@ -1,5 +1,5 @@
 package com.center.aurora.domain.notification;
 
 public enum NotificationType {
-    FRIEND, LIKE, COMMENT, CHATTING
+    FRIEND_REQUEST, FRIEND_ACCEPT, POST, CHATTING
 }

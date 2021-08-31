@@ -1,14 +1,10 @@
-package com.center.aurora.repository.chat;
+package com.center.aurora.repository.socket;
 
 import com.center.aurora.domain.chat.ChatRoom;
-import com.center.aurora.domain.post.Mood;
-import com.center.aurora.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 

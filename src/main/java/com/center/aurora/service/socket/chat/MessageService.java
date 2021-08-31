@@ -1,11 +1,11 @@
-package com.center.aurora.service.chat;
+package com.center.aurora.service.socket.chat;
 
 import com.center.aurora.domain.chat.Message;
-import com.center.aurora.repository.chat.ChatRoomRepository;
-import com.center.aurora.repository.chat.MessageRepository;
+import com.center.aurora.repository.socket.ChatRoomRepository;
+import com.center.aurora.repository.socket.MessageRepository;
 import com.center.aurora.repository.user.UserRepository;
-import com.center.aurora.service.chat.dto.MessageRecvDto;
-import com.center.aurora.service.chat.dto.MessageSendDto;
+import com.center.aurora.service.socket.chat.dto.MessageRecvDto;
+import com.center.aurora.service.socket.chat.dto.MessageSendDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

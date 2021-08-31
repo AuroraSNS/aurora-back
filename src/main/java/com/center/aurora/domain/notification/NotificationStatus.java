@@ -1,5 +1,5 @@
 package com.center.aurora.domain.notification;
 
 public enum NotificationStatus {
-    NEW, OLD
+    READ, NOT_READ
 }
