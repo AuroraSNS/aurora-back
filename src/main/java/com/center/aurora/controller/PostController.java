@@ -40,6 +40,11 @@ public class PostController {
         return postService.getPost(user_id, pageable);
     }
 
+    @GetMapping("/posts/one/{postId}")
+    public PostResponse getOnePosts(@PathVariable("postId") Long post_id) {
+        return postService.getOnePost(post_id);
+    }
+
     @PostMapping("/posts")
     public void createPost(@CurrentUser UserPrincipal userPrincipal, @ModelAttribute PostDto postDto) throws IOException {
         postService.createPost(userPrincipal.getId(),postDto);

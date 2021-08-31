@@ -17,11 +17,16 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -127,6 +132,41 @@ public class PostControllerTest {
 
         //when
         String url = "http://localhost:" + port + "/posts/" + userA.getId();
+
+        //then
+        mvc.perform(get(url))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("특정 게시물 조회")
+    @Test
+    void getOnePost() throws Exception {
+        //given
+        User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
+        User userB = User.builder().name("B").email("b@b.com").image("").role(Role.USER).bio("").build();
+        userRepository.save(userA);
+        userRepository.save(userB);
+
+        MultipartFile images = new MockMultipartFile(
+                "test.png",
+                "origin.png",
+                MediaType.IMAGE_JPEG_VALUE,
+                new FileInputStream("src/test/resources/images/image.jpg")
+        );
+        List<MultipartFile> imageList = new ArrayList<>();
+        imageList.add(images);
+        PostDto postDto = PostDto.builder().mood(Mood.sun).content("content1").images(imageList).build();
+        PostDto postDto2 = PostDto.builder().mood(Mood.moon).content("content2").images(imageList).build();
+
+        postService.createPost(userA.getId(), postDto);
+        postService.createPost(userB.getId(), postDto2);
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        List<PostResponse> posts = postService.getPost(userA.getId(),pageable);
+
+        //when
+        String url = "http://localhost:" + port + "/posts/one/" + posts.get(0).getId();
 
         //then
         mvc.perform(get(url))
