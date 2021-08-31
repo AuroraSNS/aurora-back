@@ -110,6 +110,47 @@ class FriendControllerTest {
         System.out.println(contentAsString);
     }
 
+    @Test
+    public void 친구검색() throws Exception{
+        //given
+        User userA = User.builder()
+                .name("B")
+                .email("B@B.com")
+                .bio("B")
+                .image("")
+                .role(Role.USER)
+                .build();
+        User userB = User.builder()
+                .name("AA")
+                .email("AA@AA.com")
+                .bio("AA")
+                .image("")
+                .role(Role.USER)
+                .build();
+        User userC = User.builder()
+                .name("AAC")
+                .email("AAC@AAC.com")
+                .bio("AAC")
+                .image("")
+                .role(Role.USER)
+                .build();
+
+        userRepository.save(userA);
+        userRepository.save(userB);
+        userRepository.save(userC);
+
+        String url = "http://localhost:" + port + "/friend/search?name=AA";
+
+        //when
+        MvcResult result = mvc.perform(get(url))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        //then
+        String contentAsString = result.getResponse().getContentAsString();
+        System.out.println(contentAsString);
+    }
 
     @Test
     public void 친구등록() throws Exception{

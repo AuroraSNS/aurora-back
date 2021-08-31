@@ -59,6 +59,25 @@ class FriendServiceTest {
     }
 
     @Test
+    public void 친구검색(){
+        //given
+        User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();
+        User userB = User.builder().name("AA").email("b@b.com").image("").role(Role.USER).bio("").build();
+        User userC = User.builder().name("AAA").email("c@c.com").image("").role(Role.USER).bio("").build();
+
+        userRepository.save(userA);
+        userRepository.save(userB);
+        userRepository.save(userC);
+
+        //when
+        List<FriendListDto> Friends = friendService.findFriendsByName("A");
+
+        //then
+        assertThat(Friends.size()).isEqualTo(3);
+        assertThat(Friends.get(0).getName()).isEqualTo("A");
+    }
+
+    @Test
     public void 친구_삭제(){
         //given
         User userA = User.builder().name("A").email("a@a.com").image("").role(Role.USER).bio("").build();

@@ -1,5 +1,6 @@
 package com.center.aurora.controller;
 
+import com.center.aurora.domain.post.Mood;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
 import com.center.aurora.service.user.FriendService;
@@ -21,6 +22,12 @@ public class FriendController {
     @ApiOperation(value = "친구 목록 전체 조회", notes = "현재 사용자의 모든 친구 목록을 반환합니다.")
     public List<FriendListDto> findAllFriends(@CurrentUser UserPrincipal user){
         return friendService.findAllFriends(user.getId());
+    }
+
+    @GetMapping("/friend/search")
+    @ApiOperation(value = "친구 이름 조회", notes = "이름을 기준으로 모든 친구를 조회합니다.")
+    public List<FriendListDto> findFriendsByName(@RequestParam String name){
+        return friendService.findFriendsByName(name);
     }
 
     @PostMapping("/friend/{friendId}")
