@@ -45,6 +45,14 @@ public class PostService {
     }
 
     @Transactional
+    public PostResponse getOnePost(Long post_id) {
+        Post post = postRepository.findById(post_id).get();
+        List<String> images = imageRepository.findAllImageByPostId(post);
+
+        return fetchPost(post, images);
+    }
+
+    @Transactional
     public List<PostResponse> getPost(Long user_id, Pageable pageable) {
         User user = userRepository.findById(user_id).get();
         Page<Post> list = postRepository.findAllByWriter(pageable,user);
