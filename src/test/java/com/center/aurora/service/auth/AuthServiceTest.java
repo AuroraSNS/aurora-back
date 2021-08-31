@@ -2,9 +2,8 @@ package com.center.aurora.service.auth;
 
 import com.center.aurora.domain.user.User;
 import com.center.aurora.repository.user.UserRepository;
-import com.center.aurora.service.Auth.AuthService;
-import com.center.aurora.service.Auth.Dto.AuthDto;
-import com.center.aurora.service.Auth.Dto.SignInResponse;
+import com.center.aurora.service.auth.dto.AuthDto;
+import com.center.aurora.service.auth.dto.SignInResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

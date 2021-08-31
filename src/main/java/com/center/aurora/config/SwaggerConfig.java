@@ -24,18 +24,12 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
-
-
     }
 
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
                 .title("Aurora SNS API 문서")
                 .description("Aurora SNS API 설명 문서입니다.")
-//                .license("license")
-//                .licenseUrl("licenseUrl")
-//                .contact(new Contact("name", "url", "email"))
-//                .termsOfServiceUrl("termsOfServiceUrl")
                 .version("0.0.2")
                 .build();
     }

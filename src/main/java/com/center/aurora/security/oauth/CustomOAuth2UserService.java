@@ -51,10 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                                     oAuth2User.getAttributes()
                                             );
         log.info("OAuth Client Registration ID:" + userRequest.getClientRegistration().getRegistrationId());
-        log.info(String.valueOf(oAuth2User.getAttributes()));
         log.info("oAuth2UserInfo.getAttributes()" + oAuth2UserInfo.getAttributes());
-        log.info("oAuth2UserInfo.getEmail()" + oAuth2UserInfo.getEmail());
-        log.info("StringUtils.isEmpty(oAuth2UserInfo.getEmail())" +StringUtils.isEmpty(oAuth2UserInfo.getEmail()));
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())){
             log.error("OAuth2 공급자에서 이메일을 찾을 수 없습니다.");
             throw new OAuth2AuthenticationProcessingException("OAuth2 공급자에서 이메일을 찾을 수 없습니다.");
@@ -96,7 +93,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-
         return userRepository.save(existingUser
                 .update(
                         oAuth2UserInfo.getName()

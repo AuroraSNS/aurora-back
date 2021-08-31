@@ -24,9 +24,7 @@ public class OAuth2UserInfoFactory {
             }
 
             return new NaverOAuth2UserInfo(realAttributes);
-        }  /*else if (registrationId.equalsIgnoreCase(AuthProvider.플랫폼.toString())){
-            return new 플랫폼OAuth2UserInfo(attributes);
-        }*/ else{
+        }  else{
             throw new OAuth2AuthenticationProcessingException(registrationId + " 로그인은 지원하지 않습니다.");
         }
     }

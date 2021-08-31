@@ -2,9 +2,9 @@ package com.center.aurora.controller;
 
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
-import com.center.aurora.service.socket.chat.ChatRoomService;
-import com.center.aurora.service.socket.chat.dto.ChatRoomDto;
-import com.center.aurora.service.socket.chat.dto.ChatRoomListDto;
+import com.center.aurora.service.chat.ChatRoomService;
+import com.center.aurora.service.chat.dto.ChatRoomDto;
+import com.center.aurora.service.chat.dto.ChatRoomListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

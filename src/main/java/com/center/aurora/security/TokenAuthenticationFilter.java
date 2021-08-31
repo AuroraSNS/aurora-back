@@ -1,7 +1,5 @@
 package com.center.aurora.security;
 
-import antlr.Token;
-import com.center.aurora.exception.NoCookieException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,14 +31,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         try{
             String jwt = getJwtFromRequest(request);
-//            if(jwt.equals("")) {
-//                for (Cookie cookie : request.getCookies()) {
-//                    if (cookie.getName().equals(TokenProvider.ACCESS_TOKEN_NAME)) {
-//                        jwt = cookie.getValue();
-//                        break;
-//                    }
-//                }
-//            }
 
             if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
                 Long userId = tokenProvider.getUserIdFromToken(jwt);

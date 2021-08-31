@@ -1,12 +1,12 @@
 package com.center.aurora.controller;
 
 import com.center.aurora.security.TokenProvider;
-import com.center.aurora.service.socket.chat.MessageService;
-import com.center.aurora.service.socket.chat.dto.MessageRecvDto;
-import com.center.aurora.service.socket.chat.dto.MessageSendDto;
-import com.center.aurora.service.socket.notification.NotificationService;
-import com.center.aurora.service.socket.notification.dto.NotificationRecvDto;
-import com.center.aurora.service.socket.notification.dto.NotificationSendDto.NotificationSendDto;
+import com.center.aurora.service.chat.MessageService;
+import com.center.aurora.service.chat.dto.MessageRecvDto;
+import com.center.aurora.service.chat.dto.MessageSendDto;
+import com.center.aurora.service.notification.NotificationService;
+import com.center.aurora.service.notification.dto.NotificationRecvDto;
+import com.center.aurora.service.notification.dto.NotificationSendDto.NotificationSendDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
