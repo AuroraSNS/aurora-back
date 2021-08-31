@@ -6,6 +6,7 @@ import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
 import com.center.aurora.service.user.UserService;
+import com.center.aurora.service.user.dto.FriendListDto;
 import com.center.aurora.service.user.dto.UserDto;
 import com.center.aurora.service.user.dto.UserMeDto;
 import com.center.aurora.service.user.dto.UserUpdateDto;
@@ -45,6 +46,12 @@ public class UserController {
     public UserDto getUser(@PathVariable Long id){
         User user = userRepository.findById(id).get();
         return new UserDto(user);
+    }
+
+    @GetMapping("/search")
+    @ApiOperation(value = "유저 검색", notes = "이름을 기준으로 유저를 조회합니다.")
+    public List<FriendListDto> findFriendsByName(@RequestParam String name){
+        return userService.findFriendsByName(name);
     }
 
     @PatchMapping(value = "")

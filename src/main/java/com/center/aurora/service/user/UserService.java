@@ -2,8 +2,7 @@ package com.center.aurora.service.user;
 
 import com.center.aurora.domain.user.User;
 import com.center.aurora.repository.user.UserRepository;
-import com.center.aurora.security.UserPrincipal;
-import com.center.aurora.service.user.dto.UserMeDto;
+import com.center.aurora.service.user.dto.FriendListDto;
 import com.center.aurora.service.user.dto.UserUpdateDto;
 import com.center.aurora.utils.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -39,6 +41,16 @@ public class UserService {
             String imageUrl = fileUpload(image);
             me.update(changeName, changeBio, imageUrl);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<FriendListDto> findFriendsByName(String name){
+        List<User> friends = userRepository.findFriendsByName(name);
+
+        return friends.stream()
+                .map(x-> FriendListDto.entityToDto(x))
+                .sorted(Comparator.comparing(FriendListDto::getName))
+                .collect(Collectors.toList());
     }
 
     private String fileUpload(MultipartFile file) throws IOException {
