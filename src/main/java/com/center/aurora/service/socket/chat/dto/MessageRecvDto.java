@@ -1,4 +1,4 @@
-package com.center.aurora.service.chat.dto;
+package com.center.aurora.service.socket.chat.dto;
 
 import lombok.Getter;
 
