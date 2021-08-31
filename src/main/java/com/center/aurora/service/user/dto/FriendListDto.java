@@ -7,15 +7,15 @@ import lombok.Getter;
 public class FriendListDto {
     Long id;
     String name;
-    String bio;
+    String avatar;
 
-    public FriendListDto(Long id, String name, String bio) {
+    public FriendListDto(Long id, String name, String image) {
         this.id = id;
         this.name = name;
-        this.bio = bio;
+        this.avatar = image;
     }
     public static FriendListDto entityToDto(User myFriend){
 
-        return new FriendListDto(myFriend.getId(), myFriend.getName(), myFriend.getBio());
+        return new FriendListDto(myFriend.getId(), myFriend.getName(), myFriend.getImage());
     }
 }

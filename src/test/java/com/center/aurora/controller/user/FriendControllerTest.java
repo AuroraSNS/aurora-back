@@ -1,35 +1,25 @@
 package com.center.aurora.controller.user;
 
-import com.center.aurora.config.AppProperties;
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
 import com.center.aurora.service.user.FriendService;
 import com.center.aurora.service.user.dto.FriendListDto;
-import com.center.aurora.utils.CookieUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import javax.servlet.http.Cookie;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -101,48 +91,6 @@ class FriendControllerTest {
 
         //when
         MvcResult result = mvc.perform(get(url).header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn();
-
-        //then
-        String contentAsString = result.getResponse().getContentAsString();
-        System.out.println(contentAsString);
-    }
-
-    @Test
-    public void 친구검색() throws Exception{
-        //given
-        User userA = User.builder()
-                .name("B")
-                .email("B@B.com")
-                .bio("B")
-                .image("")
-                .role(Role.USER)
-                .build();
-        User userB = User.builder()
-                .name("AA")
-                .email("AA@AA.com")
-                .bio("AA")
-                .image("")
-                .role(Role.USER)
-                .build();
-        User userC = User.builder()
-                .name("AAC")
-                .email("AAC@AAC.com")
-                .bio("AAC")
-                .image("")
-                .role(Role.USER)
-                .build();
-
-        userRepository.save(userA);
-        userRepository.save(userB);
-        userRepository.save(userC);
-
-        String url = "http://localhost:" + port + "/friend/search?name=AA";
-
-        //when
-        MvcResult result = mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();

@@ -2,34 +2,20 @@ package com.center.aurora.controller.user;
 
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
-import com.center.aurora.repository.post.ImageRepository;
-import com.center.aurora.repository.post.PostRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
-import com.center.aurora.service.user.UserService;
-import com.center.aurora.service.user.dto.UserUpdateDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.UnsupportedEncodingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -116,6 +102,49 @@ class UserControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         assertThat(contentAsString.contains(userB.getBio())).isTrue();
     }
+
+    @Test
+    public void 친구검색() throws Exception{
+        //given
+        User userA = User.builder()
+                .name("B")
+                .email("B@B.com")
+                .bio("B")
+                .image("")
+                .role(Role.USER)
+                .build();
+        User userB = User.builder()
+                .name("AA")
+                .email("AA@AA.com")
+                .bio("AA")
+                .image("")
+                .role(Role.USER)
+                .build();
+        User userC = User.builder()
+                .name("AAC")
+                .email("AAC@AAC.com")
+                .bio("AAC")
+                .image("")
+                .role(Role.USER)
+                .build();
+
+        userRepository.save(userA);
+        userRepository.save(userB);
+        userRepository.save(userC);
+
+        String url = "http://localhost:" + port + "/user/search?name=AA";
+
+        //when
+        MvcResult result = mvc.perform(get(url))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        //then
+        String contentAsString = result.getResponse().getContentAsString();
+        System.out.println(contentAsString);
+    }
+
     @Test
     public void 유저를_업데이트_한다_이미지는_안한다() throws Exception{
         //given

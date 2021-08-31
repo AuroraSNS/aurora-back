@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,15 +30,7 @@ public class FriendService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<FriendListDto> findFriendsByName(String name){
-        List<User> friends = userRepository.findFriendsByName(name);
 
-        return friends.stream()
-                .map(x-> FriendListDto.entityToDto(x))
-                .sorted(Comparator.comparing(FriendListDto::getName))
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public void addFriend(Long myId, Long friendId){
