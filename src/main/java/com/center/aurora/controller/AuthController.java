@@ -1,8 +1,8 @@
 package com.center.aurora.controller;
 
-import com.center.aurora.service.Auth.AuthService;
-import com.center.aurora.service.Auth.Dto.AuthDto;
-import com.center.aurora.service.Auth.Dto.SignInResponse;
+import com.center.aurora.service.auth.AuthService;
+import com.center.aurora.service.auth.dto.AuthDto;
+import com.center.aurora.service.auth.dto.SignInResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

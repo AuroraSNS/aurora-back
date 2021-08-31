@@ -1,7 +1,6 @@
 package com.center.aurora.domain.post;
 
-import com.center.aurora.domain.comment.Comment;
-import com.center.aurora.domain.like.Like;
+import com.center.aurora.domain.post.like.Like;
 import com.center.aurora.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;

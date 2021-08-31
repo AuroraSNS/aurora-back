@@ -3,7 +3,7 @@ package com.center.aurora.utils;
 import com.center.aurora.domain.user.AuthProvider;
 import com.center.aurora.domain.user.User;
 import com.center.aurora.repository.user.UserRepository;
-import com.center.aurora.service.Auth.Dto.Message;
+import com.center.aurora.service.auth.dto.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -91,7 +91,7 @@ public class Validators {
     }
 
     public boolean validatePassword(String password){
-        return Pattern.matches("^[a-zA-z0-9!@#$%^&*]{4,12}$", password);
+        return Pattern.matches("^[a-zA-Z0-9!@#$%^&*]{4,12}$", password);
     }
 
     public boolean validateUserName(String username){
