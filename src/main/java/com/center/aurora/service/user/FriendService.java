@@ -31,6 +31,16 @@ public class FriendService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<FriendListDto> findFriendsByName(String name){
+        List<User> friends = userRepository.findFriendsByName(name);
+
+        return friends.stream()
+                .map(x-> FriendListDto.entityToDto(x))
+                .sorted(Comparator.comparing(FriendListDto::getName))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void addFriend(Long myId, Long friendId){
         User me = userRepository.findById(myId).get();
