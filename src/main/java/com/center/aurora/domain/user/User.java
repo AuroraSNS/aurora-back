@@ -1,8 +1,8 @@
 package com.center.aurora.domain.user;
 
-import com.center.aurora.domain.post.Image;
 import com.center.aurora.domain.post.Post;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.center.aurora.domain.user.friend.Friend;
+import com.center.aurora.domain.user.friend.FriendStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -41,19 +42,11 @@ public class User {
 
     private String password;
 
-    @ManyToMany
-    @JoinTable(name = "friend",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "user_id")
-    )
-    Set<User> friends = new TreeSet<>();
+    @OneToMany(mappedBy = "me", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private Set<Friend> friends = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "friend",
-            joinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    )
-    Set<User> friendOf = new TreeSet<>();
+    @OneToMany(mappedBy = "you", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private Set<Friend> friendsOf = new HashSet<>();
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.REMOVE)
     List<Post> posts = new ArrayList<>();
@@ -69,15 +62,13 @@ public class User {
         this.image = (image.equals(""))? User.DEFAULT_IMAGE_URL : image;
     }
 
-    public void addFriends(User friend){
-        this.friends.add(friend);
-        friend.getFriends().add(this);
+    public Set<User> getFriendsSet(){
+        return friends.stream()
+                .filter(x -> x.getStatus().equals(FriendStatus.FRIEND))
+                .map(Friend::getYou)
+                .collect(Collectors.toSet());
     }
 
-    public void deleteFriend(User friend){
-        this.friends.remove(friend);
-        friend.getFriends().remove(this);
-    }
 
     @Builder
     public User(String name, String email, String image, String bio, Role role, AuthProvider provider, String providerId, String password) {

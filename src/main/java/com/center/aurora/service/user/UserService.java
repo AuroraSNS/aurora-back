@@ -1,8 +1,13 @@
 package com.center.aurora.service.user;
 
 import com.center.aurora.domain.user.User;
+import com.center.aurora.domain.user.friend.Friend;
+import com.center.aurora.domain.user.friend.FriendId;
+import com.center.aurora.domain.user.friend.FriendStatus;
+import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
-import com.center.aurora.service.user.dto.FriendListDto;
+import com.center.aurora.service.user.dto.UserDto;
+import com.center.aurora.service.user.dto.UserListDto;
 import com.center.aurora.service.user.dto.UserUpdateDto;
 import com.center.aurora.utils.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -20,6 +26,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final FriendRepository friendRepository;
 
     private final S3Uploader s3Uploader;
 
@@ -44,12 +52,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendListDto> findFriendsByName(String name){
-        List<User> friends = userRepository.findFriendsByName(name);
+    public List<UserListDto> findUsersByName(String name){
+        List<User> users = userRepository.findUserByName(name);
 
-        return friends.stream()
-                .map(x-> FriendListDto.entityToDto(x))
-                .sorted(Comparator.comparing(FriendListDto::getName))
+        return users.stream()
+                .map(UserListDto::new)
+                .sorted(Comparator.comparing(UserListDto::getName))
                 .collect(Collectors.toList());
     }
 
@@ -59,5 +67,17 @@ public class UserService {
 
     private void fileDelete(String url){
         s3Uploader.deleteFile(url,"aurora");
+    }
+
+    @Transactional(readOnly = true)
+    public UserDto getUser(Long myId, Long targetId){
+        User user = userRepository.findById(targetId).get();
+
+        String status = FriendStatus.NOT_FRIEND.name();
+        Optional<Friend> friend = friendRepository.findById(new FriendId(myId, targetId));
+        if(friend.isPresent()){
+            status = friend.get().getStatus().name();
+        }
+        return new UserDto(user, status);
     }
 }

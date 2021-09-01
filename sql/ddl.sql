@@ -13,15 +13,8 @@ create table friend
 (
     user_id   bigint not null,
     friend_id bigint not null,
-    primary key (friend_id, user_id)
-);
-
-create table hello_entity
-(
-    hello_id bigint not null AUTO_INCREMENT,
-    text1    varchar(255),
-    text2    varchar(255),
-    primary key (hello_id)
+    status    varchar(255),
+    primary key (user_id, friend_id)
 );
 
 create table image
@@ -104,8 +97,8 @@ alter table likes add constraint FKc7o2t2k4ndpg29hj446mml6ol foreign key (writer
 alter table likes add constraint FKowd6f4s7x9f3w50pvlo6x3b41 foreign key (post_id) references post(post_id);
 alter table comment add constraint FKaqdy2fu25ym7qpn6aajqf7mb2 foreign key (writer) references user(user_id);
 alter table comment add constraint FKs1slvnkuemjsq2kj4h3vhx7i1 foreign key (post_id) references post(post_id);
-alter table friend add constraint FKm8stwgqp91633qd94lj42tsj5 foreign key (user_id) references user (user_id);
-alter table friend add constraint FKgp9n7fvh2clwhl8nrgl652ntq foreign key (friend_id) references user (user_id);
+alter table friend add constraint FK3uu8s7yyof1qmenthngm24hry foreign key (user_id) references user (user_id);
+alter table friend add constraint FKf9qk6e95h3da7o1u83ihtwrqa foreign key (friend_id) references user (user_id);
 alter table image add constraint FKe2l07hc93u2bbjnl80meu3rn4 foreign key (post_id) references post (post_id);
 alter table notification add constraint FK2yifcahfjv13yy7xj33xa606y foreign key (recipient) references user (user_id);
 alter table notification add constraint FKbtvkivatoh9yitle5unojiqt4 foreign key (writer_id) references user (user_id);

@@ -41,3 +41,4 @@ out/
 /src/main/resources/templates/
 /src/main/java/com/center/aurora/controller/testController.java
 /src/main/resources/static/
+/spy.log

@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     @Query("Select u From User u where u.name like :name%")
-    List<User> findFriendsByName(@Param("name") String name);
+    List<User> findUserByName(@Param("name") String name);
 }
