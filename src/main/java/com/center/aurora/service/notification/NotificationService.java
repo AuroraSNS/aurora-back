@@ -4,8 +4,12 @@ import com.center.aurora.domain.notification.Notification;
 import com.center.aurora.domain.notification.NotificationStatus;
 import com.center.aurora.domain.notification.NotificationType;
 import com.center.aurora.domain.user.User;
+import com.center.aurora.domain.user.friend.Friend;
+import com.center.aurora.domain.user.friend.FriendId;
+import com.center.aurora.domain.user.friend.FriendStatus;
 import com.center.aurora.exception.NotExistNotificationType;
 import com.center.aurora.repository.NotificationRepository;
+import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.notification.dto.*;
 import com.center.aurora.service.notification.dto.NotificationSendDto.*;
@@ -24,6 +28,8 @@ public class NotificationService {
 
     private final UserRepository userRepository;
 
+    private final FriendRepository friendRepository;
+
     private final NotificationRepository notificationRepository;
 
     @Transactional
@@ -39,6 +45,10 @@ public class NotificationService {
                 ret = new PostNotificationDto(notificationRecvDto);
                 break;
             case FRIEND_REQUEST:
+                Friend friend1 = Friend.builder().id(new FriendId(from.getId(), to.getId())).me(from).you(to).status(FriendStatus.ONGOING).build();
+                Friend friend2 = Friend.builder().id(new FriendId(to.getId(), from.getId())).me(to).you(from).status(FriendStatus.ONGOING).build();
+                friendRepository.save(friend1);
+                friendRepository.save(friend2);
                 ret = new FriendRequestNotificationDto(notificationRecvDto);
                 break;
             case FRIEND_ACCEPT:
@@ -86,11 +96,11 @@ public class NotificationService {
     }
 
     /**
-     * 친구요청 알림 반환
+     * 친구요청 알림 반환, 확인 안한 알림만 리턴
      * */
     @Transactional(readOnly = true)
     public List<FriendRequestListDto> getAllFriendRequestNotification(Long userId){
-        List<Notification> res = notificationRepository.findAllByRecipientIdAndType(userId, NotificationType.FRIEND_REQUEST);
+        List<Notification> res = notificationRepository.findAllByRecipientIdAndTypeAndStatus(userId, NotificationType.FRIEND_REQUEST, NotificationStatus.NOT_READ);
         return res.stream()
                 .map(FriendRequestListDto::new)
                 .sorted((a,b) -> b.getTimeStamp().compareTo(a.getTimeStamp()))

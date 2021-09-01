@@ -1,15 +1,13 @@
 package com.center.aurora.controller.user;
 
 import com.center.aurora.domain.user.User;
+import com.center.aurora.domain.user.friend.FriendStatus;
 import com.center.aurora.repository.post.LikeRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
 import com.center.aurora.service.user.UserService;
-import com.center.aurora.service.user.dto.FriendListDto;
-import com.center.aurora.service.user.dto.UserDto;
-import com.center.aurora.service.user.dto.UserMeDto;
-import com.center.aurora.service.user.dto.UserUpdateDto;
+import com.center.aurora.service.user.dto.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -43,15 +41,19 @@ public class UserController {
     @GetMapping("/{id}")
     @ApiOperation(value = "특정 유저 조회", notes = "ID를 이용해 유저를 조회합니다.")
     @ApiImplicitParam(name = "id", value = "유저 Id값", dataType = "Long", paramType = "path")
-    public UserDto getUser(@PathVariable Long id){
-        User user = userRepository.findById(id).get();
-        return new UserDto(user);
+    public UserDto getUser(@CurrentUser UserPrincipal user, @PathVariable Long id){
+        if(user == null){
+            User user1 = userRepository.findById(id).get();
+            return new UserDto(user1, "NEED_LOGIN");
+        }else{
+            return userService.getUser(user.getId(), id);
+        }
     }
 
     @GetMapping("/search")
     @ApiOperation(value = "유저 검색", notes = "이름을 기준으로 유저를 조회합니다.")
-    public List<FriendListDto> findFriendsByName(@RequestParam String name){
-        return userService.findFriendsByName(name);
+    public List<UserListDto> findUsersByName(@RequestParam String name){
+        return userService.findUsersByName(name);
     }
 
     @PatchMapping(value = "")

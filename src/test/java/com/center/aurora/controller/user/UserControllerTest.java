@@ -2,6 +2,7 @@ package com.center.aurora.controller.user;
 
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
+import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,9 @@ class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FriendRepository friendRepository;
 
     @Autowired
     private WebApplicationContext context;
@@ -101,6 +105,39 @@ class UserControllerTest {
         //then
         String contentAsString = mvcResult.getResponse().getContentAsString();
         assertThat(contentAsString.contains(userB.getBio())).isTrue();
+    }
+    @Test
+    public void 특정_유저_정보를_받아온다_ACCESTOKEN과_함께() throws Exception{
+        //given
+        User userA = User.builder()
+                .name("A")
+                .email("A@A.com")
+                .image(User.DEFAULT_IMAGE_URL)
+                .bio("A입니다.")
+                .role(Role.USER)
+                .build();
+        User userB = User.builder()
+                .name("B")
+                .email("B@B.com")
+                .image(User.DEFAULT_IMAGE_URL)
+                .bio("B입니다.")
+                .role(Role.USER)
+                .build();
+
+        userRepository.save(userA);
+        userRepository.save(userB);
+
+        String url = "http://localhost:"+ port + "/user/" + userB.getId();
+        String token = tokenProvider.createTokenByUserEntity(userA);
+        //when
+        MvcResult mvcResult = mvc.perform(get(url).header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+        //then
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        assertThat(contentAsString.contains(userB.getBio())).isTrue();
+        assertThat(contentAsString.contains("NOT_FRIEND")).isTrue();
     }
 
     @Test
@@ -179,5 +216,7 @@ class UserControllerTest {
         assertThat(updatedUser.getName()).isEqualTo(updateName);
         assertThat(updatedUser.getBio()).isEqualTo(updateBio);
 
-    } 
+    }
+
+
 }
