@@ -14,4 +14,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     public List<ChatRoom> findAllMyChatRoom(@Param("id") Long id);
 
     public Boolean existsChatRoomById(Long id);
+
+    @Query("select ch from ChatRoom ch where ch.participant1.id = :id1 and ch.participant2.id = :id2")
+    public ChatRoom findByParticipant1IdAndParticipant2Id(@Param("id1") Long id1, @Param("id2") Long id2);
 }

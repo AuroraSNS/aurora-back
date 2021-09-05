@@ -16,4 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("Select u From User u where u.name like :name%")
     List<User> findUserByName(@Param("name") String name);
+
+    @Query(nativeQuery = true, value = "select * from user ORDER BY RAND() LIMIT 3")
+    List<User> findAllRandom();
 }

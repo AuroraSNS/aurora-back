@@ -2,8 +2,11 @@ package com.center.aurora.controller.user;
 
 import com.center.aurora.domain.user.Role;
 import com.center.aurora.domain.user.User;
+import com.center.aurora.repository.chat.ChatRoomRepository;
+import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.security.TokenProvider;
+import com.center.aurora.service.chat.ChatRoomService;
 import com.center.aurora.service.user.FriendService;
 import com.center.aurora.service.user.dto.FriendListDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +40,15 @@ class FriendControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private FriendRepository friendRepository;
+
+    @Autowired
+    private ChatRoomService chatRoomService;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
     private WebApplicationContext context;
 
     @Autowired
@@ -51,7 +63,10 @@ class FriendControllerTest {
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .apply(springSecurity())
                 .build();
+
         userRepository.deleteAll();
+        friendRepository.deleteAll();
+        chatRoomRepository.deleteAll();
     }
 
     @Test
@@ -164,6 +179,9 @@ class FriendControllerTest {
 
         friendService.addFriend(userA.getId(), userB.getId());
         friendService.addFriend(userA.getId(), userC.getId());
+
+        chatRoomService.createChatRoom(userA.getId(), userB.getId());
+        chatRoomService.createChatRoom(userA.getId(), userC.getId());
 
         String url = "http://localhost:" + port + "/friend/" + userB.getId();
         String token = tokenProvider.createTokenByUserEntity(userA);
