@@ -19,6 +19,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     public List<Notification> findAllByRecipientIdAndTypeAndStatus(Long recipientId, NotificationType type, NotificationStatus status);
 
-    @Query("select n from Notification n where n.recipient.id = :id and n.type = 'POST' or n.type = 'FRIEND_ACCEPT'")
+    @Query("select n" +
+            " from Notification n" +
+            " where n.recipient.id = :id and " +
+            "( "  + "n.type = 'POST' or " +
+            "n.type = 'FRIEND_ACCEPT' " + ")")
     public List<Notification> findAllNormalNotification(@Param("id") Long userId);
 }

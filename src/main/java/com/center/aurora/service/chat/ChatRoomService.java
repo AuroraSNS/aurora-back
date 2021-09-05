@@ -9,6 +9,7 @@ import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.chat.dto.ChatRoomDto;
 import com.center.aurora.service.chat.dto.ChatRoomListDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ChatRoomService {
@@ -49,6 +51,7 @@ public class ChatRoomService {
                 .build();
 
         chatRoomRepository.save(newChatRoom);
+        log.info("채팅방 생성 완료 ID = " + newChatRoom.getId());
     }
 
     @Transactional(readOnly = true)
@@ -68,5 +71,13 @@ public class ChatRoomService {
             throw new IllegalAccessException();
         }
         chatRoomRepository.deleteById(roomId);
+    }
+
+    @Transactional
+    public void deleteRoomByUsersId(Long user1Id, Long user2Id){
+        ChatRoom room = chatRoomRepository.findByParticipant1IdAndParticipant2Id(user1Id, user2Id);
+        log.info("채팅방 삭제! ID = " + room.getId());
+        chatRoomRepository.delete(room);
+        log.info("삭제 완료!");
     }
 }

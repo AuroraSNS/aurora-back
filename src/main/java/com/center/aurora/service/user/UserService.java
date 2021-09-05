@@ -6,6 +6,7 @@ import com.center.aurora.domain.user.friend.FriendId;
 import com.center.aurora.domain.user.friend.FriendStatus;
 import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
+import com.center.aurora.service.user.dto.RandomUserListDto;
 import com.center.aurora.service.user.dto.UserDto;
 import com.center.aurora.service.user.dto.UserListDto;
 import com.center.aurora.service.user.dto.UserUpdateDto;
@@ -79,5 +80,11 @@ public class UserService {
             status = friend.get().getStatus().name();
         }
         return new UserDto(user, status);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RandomUserListDto> getRandomUsers(){
+        List<User> users = userRepository.findAllRandom();
+        return users.stream().map(RandomUserListDto::new).collect(Collectors.toList());
     }
 }

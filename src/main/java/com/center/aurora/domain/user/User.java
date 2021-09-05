@@ -1,5 +1,6 @@
 package com.center.aurora.domain.user;
 
+import com.center.aurora.domain.chat.ChatRoom;
 import com.center.aurora.domain.post.Post;
 import com.center.aurora.domain.user.friend.Friend;
 import com.center.aurora.domain.user.friend.FriendStatus;
@@ -12,9 +13,9 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Entity
 public class User {
 
     public static final String DEFAULT_IMAGE_URL = "https://aurora-image-bucket.s3.ap-northeast-2.amazonaws.com/aurora/defaultProfile.png";

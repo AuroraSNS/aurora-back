@@ -3,21 +3,25 @@ package com.center.aurora.controller.user;
 import com.center.aurora.domain.post.Mood;
 import com.center.aurora.security.CurrentUser;
 import com.center.aurora.security.UserPrincipal;
+import com.center.aurora.service.chat.ChatRoomService;
 import com.center.aurora.service.user.FriendService;
 import com.center.aurora.service.user.dto.FriendListDto;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/friend")
 @RestController
 public class FriendController {
 
     private final FriendService friendService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("")
     @ApiOperation(value = "친구 목록 전체 조회", notes = "현재 사용자의 모든 친구 목록을 반환합니다.")
@@ -30,12 +34,14 @@ public class FriendController {
     @ApiImplicitParam(name = "friendId", value = "친구 Id값", dataType = "Long", paramType = "path")
     public void addFriend(@CurrentUser UserPrincipal user, @PathVariable Long friendId){
         friendService.addFriend(user.getId(), friendId);
+        chatRoomService.createChatRoom(user.getId(), friendId);
     }
 
     @DeleteMapping("/{friendId}")
     @ApiOperation(value = "친구 삭제", notes = "현재 사용자의 친구 목록에서 id에 해당하는 유저를 삭제합니다.")
     @ApiImplicitParam(name = "friendId", value = "친구 Id값", dataType = "Long", paramType = "path")
     public void deleteFriend(@CurrentUser UserPrincipal user, @PathVariable Long friendId){
+        chatRoomService.deleteRoomByUsersId(user.getId(), friendId);
         friendService.deleteFriend(user.getId(), friendId);
     }
 }

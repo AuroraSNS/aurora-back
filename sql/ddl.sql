@@ -104,7 +104,7 @@ alter table notification add constraint FK2yifcahfjv13yy7xj33xa606y foreign key 
 alter table notification add constraint FKbtvkivatoh9yitle5unojiqt4 foreign key (writer_id) references user (user_id);
 alter table post add constraint FKck6542xnt1axiyqjlceoc7khj foreign key (writer) references user (user_id);
 
-alter table chat_room add constraint FKgcssea4yrfkpr8yt6ke3tvsv foreign key (participant1_user_id) references user(user_id);
-alter table chat_room add constraint FK23jtigsqgksqupo5xfh985m42 foreign key (participant2_user_id) references user(user_id);
+alter table chat_room add constraint FKgcssea4yrfkpr8yt6ke3tvsv foreign key (participant1_user_id) references user(user_id) on delete cascade;
+alter table chat_room add constraint FK23jtigsqgksqupo5xfh985m42 foreign key (participant2_user_id) references user(user_id) on delete cascade;
 alter table message add constraint FKq97urb0l1mxmmjl54tmlya11f foreign key (room_id) references chat_room(room_id);
 alter table message add constraint FKb3y6etti1cfougkdr0qiiemgv foreign key (user_id) references user(user_id);

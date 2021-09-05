@@ -76,4 +76,10 @@ public class UserController {
         log.info("수정할 데이터 : " + updateDto);
         userService.userUpdate(user.getId(), updateDto);
     }
+
+
+    @GetMapping("/random")
+    public List<RandomUserListDto> getRandomUsers(){
+        return userService.getRandomUsers();
+    }
 }

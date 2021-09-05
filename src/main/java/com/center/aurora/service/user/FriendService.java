@@ -8,13 +8,14 @@ import com.center.aurora.repository.user.FriendRepository;
 import com.center.aurora.repository.user.UserRepository;
 import com.center.aurora.service.user.dto.FriendListDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class FriendService {
@@ -40,6 +41,8 @@ public class FriendService {
 
         addFriendLogic(me, friend);
         addFriendLogic(friend, me);
+
+        log.info("친구 등록됨!");
     }
 
     public void addFriendLogic(User user1, User user2){
